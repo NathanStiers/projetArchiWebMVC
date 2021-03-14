@@ -36,8 +36,8 @@
 .routerlink{
     margin-right: 5vmin;
 }
-  
-.addWallet{
+
+.addAsset{
     border: thin solid black;
     min-height: 30vmin;
     min-width: 60vmin;
@@ -51,7 +51,7 @@
     cursor: pointer;
 }
 
-.walletCard{
+.assetCard{
     border: thin solid black;
     min-height: 15.5rem;
     min-width: 60vmin;
@@ -64,18 +64,6 @@
     font-size: large;
     margin-bottom: 10%;
     cursor: pointer;
-}
-
-.deleteCard{
-    align-self: flex-end;
-    margin-right: 5%;
-    color: black;
-    cursor: url("/images/danger-cursor.png"), auto;
-    font-size: larger;
-}
-
-.deleteCard:hover{
-    color: red;
 }
 
 @media all and (max-width:630px){

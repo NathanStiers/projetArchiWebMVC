@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="/styles/AssetPage.css">
+    <title>My App</title>
 </head>
+
 <body>
     <div id="appContainer">
-        <a id="logo" href="/" >
-            <img src="../../assets/logo.png" alt="">
+        <a id="logo" href="/">
+            <img src="/images/logo.png" alt="">
         </a>
         <a class="routerlink" href="/wallets">Gestion</a>
         <span class="routerlink">|</span>
@@ -17,6 +20,42 @@
         <span class="routerlink">|</span>
         <a class="routerlink" href="/premium">Premium</a>
     </div>
-    
+    <h1>Asset page</h1>
+    <div class="asset">
+        <% for(let i=0 ; i < resultSQL.length ; i++) { %>
+            <div>
+                <div class="assetCard assetItem">
+                    <p>bouton d'alerte de prix</p>
+                    <a
+                        href="/assets/<%= resultSQL[i].id_wallet %>/<%= resultSQL[i].id %>/<%= resultSQL[i].quantity %>/<%= resultSQL[i].invested_amount %>">?</a>
+                    <p>
+                        <%= resultSQL[i].label %> <i><small>
+                                    <%= resultSQL[i].ticker %>
+                                </small></i>
+                    </p>
+                    <p>Quantité : <%= resultSQL[i].quantity %> unités</p>
+                    <p>Montant investit : <%= resultSQL[i].invested_amount %> €</p>
+                    <!--<p>Valeur actuelle : <%= (resultSQL[i].quantity) //* apiData.price).toFixed(2) %> €</p>-->
+                </div>
+            </div>
+            <% } %>
+                <form href="/assets/add">
+                    <div class="addAsset assetItem">
+                        <select name="asset" id="">
+                            <% for(let i=0 ; i < assetsFromType.length ; i++) { %>
+                                <option value="<%= assetsFromType[i].id %>">
+                                    <%= assetsFromType[i].label %> (<%= assetsFromType[i].ticker %>)
+                                </option>
+                            <% } %>
+                        </select>
+                        Quantité : <input type="number" name="" id="">
+                        Montant investit : <input type="number" name="" id="">
+                        <input type="submit" value="+ Ajouter un nouvel actif">
+                    </div>
+                </form>
+    </div>
+    </div>
+
 </body>
+
 </html>

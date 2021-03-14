@@ -20,33 +20,38 @@ exports.fetchAllAssets = (req, res) => {
 
 
 exports.fetchWalletAllAssets = (req, res) => {
-    db.db.query("SELECT DISTINCT a.ticker, a.label, aw.id, aw.quantity, aw.invested_amount, aw.price_alert, w.type FROM assets AS a, wallets AS w, assets_wallets AS aw WHERE aw.id_wallet = ? AND aw.id_asset = a.id AND w.user_id = ? AND w.id = aw.id_wallet;", [req.params.id_wallet, req.body.user_id], (error, resultSQL) => {
-        if (error) {
-            res.status(500).send(error)
-            return;
-        } else {
-            toolbox.mapping_label_id_types().then(mapping => {
-                if (mapping[resultSQL[0].type] === "Crypto-actifs") {
-                    toolbox.cyptoValuesCall().then(cryptoAPI => {
-                        console.log(cryptoAPI)
-                        res.status(200).json({ resultSQL, apiDataCrypto: cryptoAPI })
-                        return;
-                    }).catch(error => {
-                        console.log(error)
-                        res.status(500).send(error)
-                        return;
-                    })
-                } else {
-                    res.status(200).json(resultSQL)
-                    return;
-                }
-            }).catch(error => {
-                console.log(error)
-                res.status(500).send(error)
+    toolbox.fetchAssetsBasedOnType(req.params.id_wallet).then(assetsFromType => {
+        db.db.query("SELECT DISTINCT a.ticker, a.label, aw.id_wallet, aw.id, aw.quantity, aw.invested_amount, aw.price_alert, w.type FROM assets AS a, wallets AS w, assets_wallets AS aw WHERE aw.id_wallet = ? AND aw.id_asset = a.id AND w.user_id = ? AND w.id = aw.id_wallet;", [req.params.id_wallet, req.body.user_id], (error, resultSQL) => {
+            if (error) {
+                res.redirect('/wallets')
                 return;
-            })
-        }
-    });
+            } else {
+                toolbox.mapping_label_id_types().then(mapping => {
+                    if (mapping[resultSQL[0].type] === "Crypto-actifsss") {
+                        toolbox.cyptoValuesCall().then(cryptoAPI => {
+                            console.log(cryptoAPI)
+                            res.render("assetView.ejs", {resultSQL, cryptoAPI, assetsFromType})
+                            return;
+                        }).catch(error => {
+                            console.log(error)
+                            res.redirect('/wallets')
+                            return;
+                        })
+                    } else {
+                        res.render("assetView.ejs", {resultSQL, assetsFromType})
+                        return;
+                    }
+                }).catch(error => {
+                    console.log(error)
+                    res.redirect('/wallets')
+                    return;
+                })
+            }
+        });
+    }).catch(err => {
+        res.redirect('/wallets')
+    })
+    
 }
 
 exports.addAsset = (req, res) => {

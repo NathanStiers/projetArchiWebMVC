@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/AssetPage.css">
+    <title>My App</title>
+</head>
+
+<body>
+    <div id="appContainer">
+        <a id="logo" href="/">
+            <img src="/images/logo.png" alt="">
+        </a>
+        <a class="routerlink" href="/wallets">Gestion</a>
+        <span class="routerlink">|</span>
+        <a class="routerlink" href="/statistics">Statistics</a>
+        <span class="routerlink">|</span>
+        <a class="routerlink" href="/premium">Premium</a>
+    </div>
+    <h1>Asset page</h1>
+    <h2>Modifier les infos</h2>
+    <form action="/assets/changeQty" method="post">
+        Quantité : <input type="text" name="quantity" />
+        <input type="hidden" name="aw_id" value="<%= id %>">
+        <input type="hidden" name="wallet_id" value="<%= id_wallet %>">
+        <input type="submit" value="Send new value">
+    </form>
+    <form action="/assets/changeInvestment" method="post">
+        Montant investit : <input type="text" name="invested_amount" />
+        <input type="hidden" name="aw_id" value="<%= id %>">
+        <input type="hidden" name="wallet_id" value="<%= id_wallet %>">
+        <input type="submit" value="Send new value">
+    </form>
+    <div class="modal-container">
+        <span class="modal__title">Deeper information</span>
+        <div class="modal__content">
+            <% let pru=invested/qty %>
+                <p>PRU : <%= pru %> €</p>
+        </div>
+        <div class="modal__action">
+            <a class="vfm-btn" href="deleteAsset()">Delete asset ?</a>
+            <a class="vfm-btn" href="javascript:history.back()">Go back</a>
+        </div>
+    </div>
+
+    <p>bouton d'alerte de prix</p>
+    </div>
+
+</body>
+
+</html>

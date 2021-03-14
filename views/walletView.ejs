@@ -12,7 +12,7 @@
 <body>
     <div id="appContainer">
         <a id="logo" href="/">
-            <img src="../../assets/logo.png" alt="">
+            <img src="/images/logo.png" alt="">
         </a>
         <a class="routerlink" href="/wallets">Gestion</a>
         <span class="routerlink">|</span>
@@ -22,16 +22,16 @@
     </div>
     <div class="wallet">
         <% for(let i=0 ; i < user.wallet_list.length ; i++) { %>
-            <div class="walletCard walletItem">
+            <div class="walletCard walletItem" onclick=<% modal=true %>>
                 <a class="deleteCard" href="/wallets/delete/<%= user.wallet_list[i].id %>">X</a>
-                <a href="/asset/<%= user.wallet_list[i].id %>">
-                <p>Portefeuille <%= i+1 %>
-                </p>
-                <p>
-                    <%= user.wallet_list[i].label %>
-                </p>
-                <p>Type : <%= user.wallet_list[i].type %>
-                </p>
+                <a href="/wallets/<%= user.wallet_list[i].id %>/<%= user.wallet_list[i].type %>">
+                    <p>Portefeuille <%= i+1 %>
+                    </p>
+                    <p>
+                        <%= user.wallet_list[i].label %>
+                    </p>
+                    <p>Type : <%= user.wallet_list[i].type %>
+                    </p>
                 </a>
             </div>
 

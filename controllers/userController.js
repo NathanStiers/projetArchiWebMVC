@@ -98,17 +98,20 @@ exports.upgradeUser = (req, res) => {
         mapping_label_id_roles = result
         console.log(mapping_label_id_roles["premium"])
         if(req.body.user_role === mapping_label_id_roles["premium"]){
-            res.status(403).send("Vous êtes déjà premium")
+            res.redirect('/premium')
             return;
         }
         db.db.query("UPDATE users SET role = ? WHERE id = ?;", [mapping_label_id_roles["premium"], req.body.user_id], (error, resultSQL) => {
             if (error) {
-                res.status(500).send(error);
+                res.redirect('/premium')
                 return;
             } else {
                 let user = new User(req.body.user_id, "premium", null, null, null, null, []);
                 const token = jwt.sign({ user_id: user.id, user_role: user.role }, process.env.ACCESS_TOKEN_SECRET);
-                res.status(200).json({ user, token });
+                let d = new Date();
+                let expires = d.setTime(d.getTime() + 6 * 60 * 60 * 1000);
+                res.cookie('Token', token, { maxAge: expires }); 
+                res.redirect('/wallets')
                 return;
             }
         })

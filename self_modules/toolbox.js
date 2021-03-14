@@ -99,6 +99,34 @@ exports.fetchAllTypes = () => {
     });
 }
 
+exports.fetchAssetsBasedOnType = (id) => {
+    return new Promise((resolve, reject) => {
+        db.db.query("SELECT type FROM wallets WHERE id = ?;", id, (error, resultSQL) => {
+            if (error) {
+                reject(500)
+                return;
+            }
+            else {
+                console.log(resultSQL[0].type)
+                db.db.query("SELECT * FROM assets WHERE type = ?;", resultSQL[0].type, (error, resultSQL) => {
+                    if (error) {
+                        reject(500)
+                        return;
+                    }
+                    else {
+                        let ret = []
+                        resultSQL.forEach(r => {
+                            ret.push(r);
+                        });
+                        resolve(ret)
+                        return;
+                    }
+                });
+            }
+        });
+    });
+}
+
 exports.cyptoValuesCall = () => {
     return new Promise((resolve, reject) => {
         axios
