@@ -1,0 +1,88 @@
+*{
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2c3e50;
+}
+
+#appContainer a {
+    font-weight: bold;
+    color: #2c3e50;
+}
+  
+#appContainer a.router-link-exact-active {
+    color: #42b983;
+}
+  
+#appContainer{
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    height: 13vmin;
+    margin-bottom: 7vmin;
+}
+  
+#logo{
+    margin-right: auto;
+}
+  
+#logo img{
+    height: 13vmin;
+    width: auto;
+    margin-left: 1vmin;
+    margin-right: auto;
+}
+  
+.routerlink{
+    margin-right: 5vmin;
+}
+  
+.addWallet{
+    border: thin solid black;
+    min-height: 30vmin;
+    min-width: 60vmin;
+    max-height: 60vmin;
+    max-width: 70vmin;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    font-size: large;
+    cursor: pointer;
+}
+
+.walletCard{
+    border: thin solid black;
+    min-height: 15.5rem;
+    min-width: 60vmin;
+    max-height: 15.5rem;
+    max-width: 70vmin;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    font-size: large;
+    margin-bottom: 10%;
+    cursor: pointer;
+}
+
+.deleteCard{
+    align-self: flex-end;
+    margin-right: 5%;
+    color: black;
+    cursor: url("../../assets/danger-cursor.png"), auto;
+    font-size: larger;
+}
+
+.deleteCard:hover{
+    color: red;
+}
+
+@media all and (max-width:630px){
+    .routerlink{
+        margin-right: 3vmin;
+    }
+    #appContainer a {
+        font-size: 0.9em;
+    }
+}

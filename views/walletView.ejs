@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/WalletPage.css">
+    <title>My App</title>
+</head>
+
+<body>
+    <div id="appContainer">
+        <a id="logo" href="/">
+            <img src="../../assets/logo.png" alt="">
+        </a>
+        <a class="routerlink" href="/wallets">Gestion</a>
+        <span class="routerlink">|</span>
+        <a class="routerlink" href="/statistics">Statistics</a>
+        <span class="routerlink">|</span>
+        <a class="routerlink" href="/premium">Premium</a>
+    </div>
+    <div class="wallet">
+        <% for(let i=0 ; i < user.wallet_list.length ; i++) { %>
+            <div class="walletCard walletItem">
+                <a class="deleteCard" href="/wallets/delete/<%= user.wallet_list[i].id %>">X</a>
+                <a href="/asset/<%= user.wallet_list[i].id %>">
+                <p>Portefeuille <%= i+1 %>
+                </p>
+                <p>
+                    <%= user.wallet_list[i].label %>
+                </p>
+                <p>Type : <%= user.wallet_list[i].type %>
+                </p>
+                </a>
+            </div>
+
+            <% } %>
+                <a href="/wallets/add">
+                    <div class="addWallet walletItem">
+                        <p>+</p>
+                        <p>Ajouter un nouveau</p>
+                        <p>portefeuille</p>
+                    </div>
+                </a>
+    </div>
+</body>
+
+</html>
