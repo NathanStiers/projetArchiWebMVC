@@ -15,17 +15,24 @@
             <img src="/images/logo.png" alt="">
         </a>
     </div>
-    <div class="login">
-        <h1>Login page</h1>
-        <form action="/user/connect" method="post">
-            <div>
-                Mail : <input type="email" name="mail" required>
-                Mot de passe : <input type="password" name="password">
+    <% if(typeof notification !=='undefined' ){ %>
+        <div class="notification">
+            <p>
+                <%= notification %>
+            </p>
+        </div>
+        <% } %>
+            <div class="login">
+                <h1>Login page</h1>
+                <form action="/user/connect" method="post">
+                    <div>
+                        Mail : <input type="email" name="mail" required>
+                        Mot de passe : <input type="password" name="password">
+                    </div>
+                    <input type="submit" formaction="/user/forgotPwd" value="J'ai oublié mon mdp">
+                    <input type="submit" value="Envoyer les infos">
+                </form>
             </div>
-            <input type="submit" formaction="/user/forgotPwd" value="J'ai oublié mon mdp">
-            <input type="submit" value="Envoyer les infos">
-        </form>
-    </div>
 </body>
 
 </html>

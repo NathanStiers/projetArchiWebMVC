@@ -1,17 +1,12 @@
 # TODO
-- Rename Wallet
-- LogOut
 - Rendre unique la paire wallet_id, asset_id dans aw
-- Ajouter actif
-- Supprimer actif
-- Enlever la possibilité de création de wallet si le maximum est atteint
 - Avoir plus d'infos sur un actif
 - Rechercher un actif
 - Trier les actifs
 - Utiliser les datalist
 - Faire la page de statistiques
 - Créer les alertes de prix
-- Questions prof sur ce qui est attendu en MVC VS API/WEBAPP
 - Rapport MVC
 - Refactorer l'application
 - Add CSS
+- Au lieu de faire des redirect dans les erreurs, ajouter un req.body.notification ; Idem pour les render.

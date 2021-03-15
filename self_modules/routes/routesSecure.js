@@ -9,6 +9,7 @@ const toolbox = require("../toolbox");
 
 const isBelongingWallet = require('../middlewares/isBelongingWallet')
 const maxWalletReached = require('../middlewares/maxWalletReached')
+const mappingRoles = require('../middlewares/mappingRoles')
 
 // Routes Views
 router.get('/wallets', maxWalletReached, walletController.fetchAllWallets);
@@ -23,7 +24,7 @@ router.get('/logout', (req, res) => {
 })
 
 // Routes Users
-router.post('/user/premium', userController.upgradeUser);
+router.post('/user/premium', mappingRoles, userController.upgradeUser);
 
 // Routes Wallets
 router.post('/wallets/create', maxWalletReached, walletController.createWallet);

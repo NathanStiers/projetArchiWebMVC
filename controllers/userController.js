@@ -8,114 +8,101 @@ const jwt = require('jsonwebtoken');
 
 const saltRounds = 12;
 
-let mapping_label_id_roles = {};
-
 // Permet de créer un nouvel utilisateur s'il n'existe pas déjà
 // Method : POST 
 // Body : name, surname, mail, password
 exports.createUser = (req, res) => {
-    console.log("hello")
+    if(req.body.notification){
+        res.render('SubscribeView.ejs', {notification : req.body.notification})
+        return;
+    }
+    if(req.body.password !== req.body.passwordConfirm){
+        res.render('SubscribeView.ejs', {notification : "Les mots de passe ne correspondent pas"})
+        return;
+    }
     let user = new User(null, 1, req.body.name, req.body.surname, req.body.mail, null, []);
     bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
         if (err) {
-            res.redirect('/wallets')
+            res.render('SubscribeView.ejs', {notification : err + ". Please contact the webmaster"})
             return;
         }
         user.password = hash;
-        if (!toolbox.checkMail(user.mail)) {
-            res.redirect('/wallets')
+        if (!toolbox.checkMail(user.mail)) { //Check all info user
+            res.render('SubscribeView.ejs', {notification : "Le mail ne correspond pas au bon format"})
             return;
         }
-        toolbox.mapping_label_id_roles().then(result => {
-            mapping_label_id_roles = result
-            db.db.query("INSERT INTO users (role, name, surname, mail, password) VALUES (?, ?, ?, ?, ?);", [mapping_label_id_roles['basic'], user.name, user.surname, user.mail, user.password], (error, resultSQL) => {
-                if (error) {
-                    if (error.errno === 1062) {
-                        res.redirect('/wallets')
-                        return;
-                    }
-                    res.redirect('/wallets')
-                    return;
-                } else {
-                    user.id = resultSQL.insertId;
-                    user.password = null;
-                    user.role = "basic";
-                    const token = jwt.sign({ user_id: user.id, user_role: user.role }, process.env.ACCESS_TOKEN_SECRET);
-                    res.redirect('/wallets')
+        let mapping_roles = req.body.mapping_roles
+        db.db.query("INSERT INTO users (role, name, surname, mail, password) VALUES (?, ?, ?, ?, ?);", [mapping_roles['basic'], user.name, user.surname, user.mail, user.password], (error, resultSQL) => {
+            if (error) {
+                if (error.errno === 1062) {
+                    res.render('SubscribeView.ejs', {notification : "Ce mail est déjà utilisé"})
                     return;
                 }
-            });
-            return;
-        }).catch(error => {
-            res.redirect('/wallets')
-            return;
-        })
-    });
+                res.render('SubscribeView.ejs', {notification : error + ". Please contact the webmaster"})
+                return;
+            } else {
+                user.id = resultSQL.insertId;
+                user.password = null;
+                user.role = "basic";
+                const token = jwt.sign({ user_id: user.id, user_role: user.role }, process.env.ACCESS_TOKEN_SECRET);
+                let d = new Date();
+                let expires = d.setTime(d.getTime() + 6 * 60 * 60 * 1000);
+                res.cookie('Token', token, { maxAge: expires });
+                res.redirect('/wallets')
+                return;
+            }
+        });
+    })
 }
 
 // Permet d'authentifier un utilisateur sur base de son mail et de son mot de passe
 // Method : POST 
 // Body : mail, password
 exports.connectUser = (req, res) => {
-    let user = new User(null, null, null, null, req.body.mail, null, []);
-    __fetchUserByMail(user.mail).then(resultUser => {
-        bcrypt.compare(req.body.password, resultUser.password, function (err, result) {
-            if (err) {
-                res.render('loginView.ejs', {msg:err})
-                return;
-            } else if (result) {
-                delete resultUser.password
-                const token = jwt.sign({ user_id: resultUser.id, user_role: resultUser.role }, process.env.ACCESS_TOKEN_SECRET);
-                let d = new Date();
-                let expires = d.setTime(d.getTime() + 6 * 60 * 60 * 1000);
-                res.cookie('Token', token, { maxAge: expires }); 
-                res.redirect('/wallets')
-                //res.render('walletView.ejs', {resultUser})
-                return;
-            } else {
-                res.render('loginView.ejs', {msg:"Authentification incorrecte"})
-                return;
-            }
-        });
-    }).catch(err => {
-        if (err === 400) {
-            res.render('loginView.ejs', {msg:"L'adresse mail indiquée ne respecte pas le format d'une adresse mail correcte"})
+    if(req.body.notification){
+        res.render('LoginView.ejs', {notification : req.body.notification})
+        return;
+    }
+    bcrypt.compare(req.body.password, req.body.user.password, function (error, result) {
+        if (error) {
+            res.render('LoginView.ejs', {notification : error + ". Please contact the webmaster"})
             return;
-        } else if (err === 403) {
-            res.render('loginView.ejs', {msg:"Désolé, il n'existe pas d'utilisateur avec l'adresse mail : " + user.mail})
+        } else if (result) {
+            delete req.body.user.password
+            const token = jwt.sign({ user_id: req.body.user.id, user_role: req.body.user.role }, process.env.ACCESS_TOKEN_SECRET);
+            let d = new Date();
+            let expires = d.setTime(d.getTime() + 6 * 60 * 60 * 1000);
+            res.cookie('Token', token, { maxAge: expires });
+            res.redirect('/wallets')
             return;
         } else {
-            res.render('loginView.ejs', {msg:err})
+            res.render('LoginView.ejs', {notification : "Authentification incorrecte"})
             return;
         }
-    })
+    });
 }
 
 // Permet de modifier le rôle d'un utilisateur classique vers utilisateur premium sur base de son id
 // Method : GET
 // Body : id (from JWT)
 exports.upgradeUser = (req, res) => {
-    toolbox.mapping_label_id_roles().then(result => {
-        mapping_label_id_roles = result
-        console.log(mapping_label_id_roles["premium"])
-        if(req.body.user_role === mapping_label_id_roles["premium"]){
+    let mapping_roles = req.body.mapping_roles
+    if (req.body.user_role === mapping_roles["premium"]) {
+        res.redirect('/premium')
+        return;
+    }
+    db.db.query("UPDATE users SET role = ? WHERE id = ?;", [mapping_roles["premium"], req.body.user_id], (error, resultSQL) => {
+        if (error) {
             res.redirect('/premium')
             return;
+        } else {
+            const token = jwt.sign({ user_id: req.body.user_id, user_role: "premium" }, process.env.ACCESS_TOKEN_SECRET);
+            let d = new Date();
+            let expires = d.setTime(d.getTime() + 6 * 60 * 60 * 1000);
+            res.cookie('Token', token, { maxAge: expires });
+            res.redirect('/wallets')
+            return;
         }
-        db.db.query("UPDATE users SET role = ? WHERE id = ?;", [mapping_label_id_roles["premium"], req.body.user_id], (error, resultSQL) => {
-            if (error) {
-                res.redirect('/premium')
-                return;
-            } else {
-                let user = new User(req.body.user_id, "premium", null, null, null, null, []);
-                const token = jwt.sign({ user_id: user.id, user_role: user.role }, process.env.ACCESS_TOKEN_SECRET);
-                let d = new Date();
-                let expires = d.setTime(d.getTime() + 6 * 60 * 60 * 1000);
-                res.cookie('Token', token, { maxAge: expires }); 
-                res.redirect('/wallets')
-                return;
-            }
-        })
     })
 }
 
@@ -123,102 +110,34 @@ exports.upgradeUser = (req, res) => {
 // Method : POST
 // Body : email
 exports.forgotPwdUser = (req, res) => {
-    let user = new User(null, null, null, null, req.body.mail, null, []);
-    __fetchUserByMail(user.mail).then(resultUser => {
-        let newPassword = generator.generate({
-            length: 10,
-            numbers: true
-        });
-        user.id = resultUser.id
-        bcrypt.hash(newPassword, saltRounds, (err, hash) => {
-            if (err) {
-                res.status(500).send(err);
-                return;
-            }
-            db.db.query("UPDATE users SET password = ? WHERE id = ?;", [hash, user.id], (error, resultSQL) => {
-                if (error) {
-                    res.status(500).send(error);
-                    return;
-                } else {
-                    toolbox.sendMail(resultUser.mail, "Confidential : Your new password", newPassword).then(result => {
-                        res.status(200).send("Email envoyé")
-                        return;
-                    }).catch(error => {
-                        res.status(500).send(error);
-                        return;
-                    });
-                }
-            });
-        })
-    }).catch(err => {
-        if (err === 400) {
-            res.status(400).send("L'adresse mail indiquée ne respecte pas le format d'une adresse mail correcte");
-            return;
-        } else if (err === 403) {
-            res.status(403).send("Désolé, il n'existe pas d'utilisateur avec l'adresse mail : " + user.mail);
-            return;
-        } else {
-            res.status(500).send(err);
+    if(req.body.notification){
+        res.render('LoginView.ejs', {notification : req.body.notification})
+        return;
+    }
+    let mail = req.body.user.mail
+    let id = req.body.user.id
+    let newPassword = generator.generate({
+        length: 10,
+        numbers: true
+    });
+    bcrypt.hash(newPassword, saltRounds, (error, hash) => {
+        if (error) {
+            res.render('LoginView.ejs', {notification : error + ". Please contact the webmaster"})
             return;
         }
+        db.db.query("UPDATE users SET password = ? WHERE id = ?;", [hash, id], (error, resultSQL) => {
+            if (error) {
+                res.render('LoginView.ejs', {notification : error + ". Please contact the webmaster"})
+                return;
+            } else {
+                toolbox.sendMail(mail, "Confidential : Your new password", newPassword).then(result => {
+                    res.render('LoginView.ejs', {notification : "Email envoyé à : " + mail})
+                    return;
+                }).catch(error => {
+                    res.render('LoginView.ejs', {notification : error + ". Please contact the webmaster"})
+                    return;
+                });
+            }
+        });
     })
-    return;
-}
-
-// PRIVATE ==> Permet de récupérer les informations d'un utilisateur sur base de son mail
-__fetchUserByMail = mail => {
-    return new Promise((resolve, reject) => {
-        if (!toolbox.checkMail(mail)) {
-            reject(400);
-            return;
-        }
-        db.db.query("SELECT * FROM users WHERE mail = ?;", mail, (error, resultSQL) => {
-            if (error) {
-                reject(500);
-                return;
-            } else {
-                if (resultSQL.length === 0) {
-                    reject(403);
-                    return;
-                } else {
-                    toolbox.mapping_label_id_roles().then(result => {
-                        mapping_label_id_roles = result
-                        resultSQL[0].role = mapping_label_id_roles[resultSQL[0].role]
-                        resolve(resultSQL[0]);
-                        return;
-                    }).catch(error => {
-                        reject(error);
-                        return;
-                    })
-                }
-            }
-        });
-    });
-}
-
-// PACKAGE ==> Permet de récupérer les informations d'un utilisateur sur base de son id
-__fetchUserById = id => {
-    return new Promise((resolve, reject) => {
-        db.db.query("SELECT * FROM users WHERE id = ?;", id, (error, resultSQL) => {
-            if (error) {
-                reject(500);
-                return;
-            } else {
-                if (resultSQL.length === 0) {
-                    reject(403);
-                    return;
-                } else {
-                    toolbox.mapping_label_id_roles().then(result => {
-                        mapping_label_id_roles = result
-                        resultSQL[0].role = mapping_label_id_roles[resultSQL[0].role]
-                        resolve(resultSQL[0]);
-                        return;
-                    }).catch(error => {
-                        reject(error);
-                        return;
-                    })
-                }
-            }
-        });
-    });
 }

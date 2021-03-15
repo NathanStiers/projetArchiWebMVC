@@ -9,9 +9,9 @@ exports.fetchAllAssets = (req, res) => {
             res.status(500).send(error)
             return;
         } else {
-            resultSQL.forEach(r => {
+            /*resultSQL.forEach(r => {
                 delete r.id
-            });
+            });*/
             res.status(200).json(resultSQL)
             return;
         }
