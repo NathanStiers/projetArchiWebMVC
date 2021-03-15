@@ -38,13 +38,26 @@
             </div>
 
             <% } %>
-                <a href="/wallets/add">
+            <% if(!max_reached){ %>
                     <div class="addWallet walletItem">
-                        <p>+</p>
-                        <p>Ajouter un nouveau</p>
-                        <p>portefeuille</p>
+                        <form class="modal-container" method="POST" action="/wallets/create">
+                            <span class="modal__title">Create a new wallet</span>
+                            <div class="modal__content">
+                              Label : <input type="text" name="label" id="" maxlength="50">
+                              <br/><br/>
+                              Type : <select name="type" id="">
+                                  <option value="">--Please choose an option--</option>
+                                  <% for(let i=0 ; i < types.length ; i++) { %>
+                                      <option value="<%= types[i] %>" ><%= types[i] %></option>
+                                  <% } %>
+                              </select>
+                            </div>
+                            <div class="modal__action">
+                              <input class="vfm-btn" type="submit" value="confirm">
+                            </div>
+                          </form>
                     </div>
-                </a>
+            <% } %>
     </div>
 </body>
 

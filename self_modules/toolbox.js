@@ -114,11 +114,11 @@ exports.fetchAssetsBasedOnType = (id) => {
                         return;
                     }
                     else {
-                        let ret = []
+                        let assets = []
                         resultSQL.forEach(r => {
-                            ret.push(r);
+                            assets.push(r);
                         });
-                        resolve(ret)
+                        resolve({assets, type : resultSQL[0].type})
                         return;
                     }
                 });

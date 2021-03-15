@@ -25,8 +25,8 @@
     <h1>Asset page</h1>
     <form action="/wallets/rename" method="POST">
         Renommer le wallet : <input type="text" name="label" id="">
-        <input type="hidden" name="id_wallet" value="<%= resultSQL[0].id_wallet %>">
-        <input type="hidden" name="wallet_id" value="<%= resultSQL[0].id_wallet %>">
+        <input type="hidden" name="id_wallet" value="<%= id_wallet %>">
+        <input type="hidden" name="wallet_id" value="<%= id_wallet %>">
         <input type="submit" value="Renommer">
     </form>
     <br/>
@@ -66,7 +66,7 @@
                         </select>
                         Quantité : <input type="number" name="quantity" id="" step="0.000000001">
                         Montant investit : <input type="number" name="invested_amount" id="" step="0.001">
-                        <input type="hidden" name="wallet_id" value="<%= resultSQL[0].id_wallet %>">
+                        <input type="hidden" name="wallet_id" value="<%= id_wallet %>">
                         <input type="submit" value="+ Ajouter un nouvel actif">
                     </div> 
                 </form>

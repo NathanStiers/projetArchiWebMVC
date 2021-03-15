@@ -11,14 +11,7 @@ const isBelongingWallet = require('../middlewares/isBelongingWallet')
 const maxWalletReached = require('../middlewares/maxWalletReached')
 
 // Routes Views
-router.get('/wallets', walletController.fetchAllWallets);
-router.get('/wallets/add', (req, res) => {
-    toolbox.fetchAllTypes().then(result => {
-        res.render('walletAddView.ejs', {types : result})
-    }).catch(err => {
-        res.redirect('/wallets')
-    });
-});
+router.get('/wallets', maxWalletReached, walletController.fetchAllWallets);
 router.get('/premium', (req, res) => res.render('premiumView.ejs'));
 router.get('/statistics', (req, res) => res.render('statisticsView.ejs'));
 router.get('/wallets/:id_wallet/', assetController.fetchWalletAllAssets);

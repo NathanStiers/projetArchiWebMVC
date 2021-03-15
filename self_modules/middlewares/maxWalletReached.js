@@ -10,9 +10,11 @@ module.exports = (req, res, callback) => {
             let count = resultSQLCount[0].count;
             let role = req.body.user_role
             if ((count >= 3 && role === "basic") || (count >= 10 && role === "premium")) {
-                res.status(403).send("Vous avez atteint votre limite de création de portefeuilles");
+                req.body.max_reached = true
+                callback();
                 return;
             } else {
+                req.body.max_reached = false
                 callback();
                 return;
             }

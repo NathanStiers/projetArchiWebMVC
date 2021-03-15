@@ -14,15 +14,16 @@ let mapping_label_id_roles = {};
 // Method : POST 
 // Body : name, surname, mail, password
 exports.createUser = (req, res) => {
+    console.log("hello")
     let user = new User(null, 1, req.body.name, req.body.surname, req.body.mail, null, []);
     bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
         if (err) {
-            res.status(500).send(err);
+            res.redirect('/wallets')
             return;
         }
         user.password = hash;
         if (!toolbox.checkMail(user.mail)) {
-            res.status(400).send("L'adresse mail ne respecte pas le format d'une adresse existante");
+            res.redirect('/wallets')
             return;
         }
         toolbox.mapping_label_id_roles().then(result => {
@@ -30,23 +31,23 @@ exports.createUser = (req, res) => {
             db.db.query("INSERT INTO users (role, name, surname, mail, password) VALUES (?, ?, ?, ?, ?);", [mapping_label_id_roles['basic'], user.name, user.surname, user.mail, user.password], (error, resultSQL) => {
                 if (error) {
                     if (error.errno === 1062) {
-                        res.status(403).send("Cet utilisateur existe déjà")
+                        res.redirect('/wallets')
                         return;
                     }
-                    res.status(500).send(error);
+                    res.redirect('/wallets')
                     return;
                 } else {
                     user.id = resultSQL.insertId;
                     user.password = null;
                     user.role = "basic";
                     const token = jwt.sign({ user_id: user.id, user_role: user.role }, process.env.ACCESS_TOKEN_SECRET);
-                    res.status(201).json({ user, token });
+                    res.redirect('/wallets')
                     return;
                 }
             });
             return;
         }).catch(error => {
-            res.status(500).send(error);
+            res.redirect('/wallets')
             return;
         })
     });

@@ -1,3 +1,4 @@
+const cookieParser = require('cookie-parser');
 const User = require('../models/userModel');
 let Wallet = require('../models/walletModel');
 
@@ -21,18 +22,23 @@ exports.fetchAllWallets = (req, res) => {
         mapping_label_id_types = result;
         db.db.query("SELECT * FROM wallets WHERE user_id = ? ORDER BY creation_date ASC, id ASC LIMIT ?;", [user.id, user.role === "premium" ? 10 : 3], (error, resultSQL) => {
             if (error) {
-                res.render('walletView.ejs', {msg:error})
+                res.render('walletView.ejs', { msg: error })
                 return;
             } else {
-                resultSQL.forEach(w => {
-                    user.wallet_list.push(new Wallet(w.id, mapping_label_id_types[w.type], w.label, w.creation_date, [], user.id))
+                toolbox.fetchAllTypes().then(result => {
+                    resultSQL.forEach(w => {
+                        user.wallet_list.push(new Wallet(w.id, mapping_label_id_types[w.type], w.label, w.creation_date, [], user.id))
+                    });
+                    console.log(req.body.max_reached)
+                    res.render('walletView.ejs', { user, max_reached: req.body.max_reached, types: result })
+                    return;
+                }).catch(err => {
+                    res.redirect('/wallets')
                 });
-                res.render('walletView.ejs', {user})
-                return;
             }
         });
     }).catch(error => {
-        res.render('walletView.ejs', {msg:error})
+        res.render('walletView.ejs', { msg: error })
         return;
     });
 }
@@ -41,6 +47,10 @@ exports.fetchAllWallets = (req, res) => {
 // Method : POST 
 // Body : user_id, type, label
 exports.createWallet = (req, res) => {
+    if(req.body.max_reached){
+        res.redirect('/wallets/add')
+        return;
+    }
     toolbox.mapping_label_id_types().then(result => {
         mapping_label_id_types = result
         let date = new Date();
@@ -71,6 +81,7 @@ exports.deleteWallet = (req, res) => {
     let wallet = new Wallet(req.params.id_wallet, null, null, null, [], req.body.user_id);
     db.db.query("DELETE FROM wallets WHERE id = ? AND user_id = ?;", [wallet.id, wallet.user_id], (error, resultSQL) => {
         if (error) {
+            console.log(error)
             res.redirect('/wallets')
             return;
         } else {
@@ -87,10 +98,10 @@ exports.renameWallet = (req, res) => {
     let wallet = new Wallet(req.body.wallet_id, null, req.body.label, null, [], req.body.user_id);
     db.db.query("UPDATE wallets SET label = ? WHERE id = ? AND user_id = ?;", [wallet.label, wallet.id, wallet.user_id], (error, resultSQL) => {
         if (error) {
-            res.redirect('/wallets/'+wallet.id)
+            res.redirect('/wallets/' + wallet.id)
             return;
         } else {
-            res.redirect('/wallets/'+wallet.id)
+            res.redirect('/wallets/' + wallet.id)
             return;
         }
     });

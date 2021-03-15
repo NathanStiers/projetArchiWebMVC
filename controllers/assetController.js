@@ -27,22 +27,19 @@ exports.fetchWalletAllAssets = (req, res) => {
                 return;
             } else {
                 toolbox.mapping_label_id_types().then(mapping => {
-                    if (mapping[resultSQL[0].type] === "Crypto-actifsss") {
+                    if ((mapping[assetsFromType.type]) === "Crypto-actifsss") {
                         toolbox.cyptoValuesCall().then(cryptoAPI => {
-                            console.log(cryptoAPI)
-                            res.render("assetView.ejs", {resultSQL, cryptoAPI, assetsFromType})
+                            res.render("assetView.ejs", {resultSQL, cryptoAPI, assetsFromType : assetsFromType.assets, id_wallet:req.params.id_wallet})
                             return;
                         }).catch(error => {
-                            console.log(error)
                             res.redirect('/wallets')
                             return;
                         })
                     } else {
-                        res.render("assetView.ejs", {resultSQL, assetsFromType})
+                        res.render("assetView.ejs", {resultSQL, assetsFromType : assetsFromType.assets, id_wallet:req.params.id_wallet})
                         return;
                     }
                 }).catch(error => {
-                    console.log(error)
                     res.redirect('/wallets')
                     return;
                 })
