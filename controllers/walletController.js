@@ -84,13 +84,13 @@ exports.deleteWallet = (req, res) => {
 // Method : POST 
 // Body : id, user_id, label
 exports.renameWallet = (req, res) => {
-    let wallet = new Wallet(req.body.id, null, req.body.label, null, [], req.body.user_id);
+    let wallet = new Wallet(req.body.wallet_id, null, req.body.label, null, [], req.body.user_id);
     db.db.query("UPDATE wallets SET label = ? WHERE id = ? AND user_id = ?;", [wallet.label, wallet.id, wallet.user_id], (error, resultSQL) => {
         if (error) {
-            res.status(500).send(error);
+            res.redirect('/wallets/'+wallet.id)
             return;
         } else {
-            res.status(200).send("Modification effectuée")
+            res.redirect('/wallets/'+wallet.id)
             return;
         }
     });

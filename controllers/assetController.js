@@ -56,27 +56,27 @@ exports.fetchWalletAllAssets = (req, res) => {
 
 exports.addAsset = (req, res) => {
     if (req.body.wallet_type !== req.body.asset_type) {
-        res.status(403).send("Le type de l'asset ne correspond pas à celui du portefeuille")
+        res.redirect('/wallets/'+req.body.wallet_id)
         return;
     }
-    db.db.query("INSERT INTO assets_wallets (id_wallet, id_asset, quantity, invested_amount) VALUES(?,?,?,?,?);", [req.body.wallet_id, req.body.asset_id, req.body.quantity, req.body.invested_amount], (error, resultSQL) => {
+    db.db.query("INSERT INTO assets_wallets (id_wallet, id_asset, quantity, invested_amount) VALUES(?,?,?,?);", [req.body.wallet_id, req.body.asset_id, req.body.quantity, req.body.invested_amount], (error, resultSQL) => {
         if (error) {
-            res.status(500).send(error)
+            res.redirect('/wallets/'+req.body.wallet_id)
             return;
         } else {
-            res.status(201).send("Ajout effectué")
+            res.redirect('/wallets/'+req.body.wallet_id)
             return;
         }
     });
 }
 
 exports.removeAsset = (req, res) => {
-    db.db.query("DELETE FROM assets_wallets WHERE id_wallet = ? AND id_asset = ?;", [req.body.wallet_id, req.body.asset_id], (error, resultSQL) => {
+    db.db.query("DELETE FROM assets_wallets WHERE id = ?;", [req.body.id_wallet_asset], (error, resultSQL) => {
         if (error) {
-            res.status(500).send(error)
+            res.redirect('/wallets/'+req.body.wallet_id)
             return;
         } else {
-            res.status(200).send("Suppression effectuée")
+            res.redirect('/wallets/'+req.body.wallet_id)
             return;
         }
     });
@@ -84,15 +84,15 @@ exports.removeAsset = (req, res) => {
 
 exports.changeQtyAsset = (req, res) => {
     if (req.body.quantity <= 0) {
-        res.status(403).send("Le montant est incorrect")
+        res.render('assetInfoView.ejs', {id_wallet:req.body.wallet_id, id:req.body.aw_id, qty:req.body.old_qty, invested:req.body.invested_amount, err_msg:"La quantité est invalide"})
         return;
     }
     db.db.query("UPDATE assets_wallets SET quantity = ? WHERE id = ?;", [req.body.quantity, req.body.aw_id], (error, resultSQL) => {
         if (error) {
-            res.status(500).send(error)
+            res.render('assetInfoView.ejs', {id_wallet:req.body.wallet_id, id:req.body.aw_id, qty:req.body.old_qty, invested:req.body.invested_amount, err_msg:"Erreur inconnue"})
             return;
         } else {
-            res.status(200).send("Mise à jour effectuée")
+            res.render('assetInfoView.ejs', {id_wallet:req.body.wallet_id, id:req.body.aw_id, qty:req.body.quantity, invested:req.body.invested_amount})
             return;
         }
     });
@@ -131,15 +131,15 @@ exports.setPriceAlert = (req, res) => {
 
 exports.changeInitialInvestment = (req, res) => {
     if (req.body.invested_amount <= 0) {
-        res.status(403).send("Le montant est incorrect")
+        res.render('assetInfoView.ejs', {id_wallet:req.body.wallet_id, id:req.body.aw_id, qty:req.body.quantity, invested:req.body.old_amount, err_msg:"Le montant est incorrect"})
         return;
     }
     db.db.query("UPDATE assets_wallets SET invested_amount = ? WHERE id = ?;", [req.body.invested_amount, req.body.aw_id], (error, resultSQL) => {
         if (error) {
-            res.status(500).send(error)
+            res.render('assetInfoView.ejs', {id_wallet:req.body.wallet_id, id:req.body.aw_id, qty:req.body.quantity, invested:req.body.old_amount, err_msg:"Le montant est incorrect"})
             return;
         } else {
-            res.status(200).send("Mise à jour effectuée")
+            res.render('assetInfoView.ejs', {id_wallet:req.body.wallet_id, id:req.body.aw_id, qty:req.body.quantity, invested:req.body.invested_amount})
             return;
         }
     })

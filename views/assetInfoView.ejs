@@ -19,18 +19,24 @@
         <a class="routerlink" href="/statistics">Statistics</a>
         <span class="routerlink">|</span>
         <a class="routerlink" href="/premium">Premium</a>
+        <span class="routerlink">|</span>
+        <a class="routerlink" href="/logout">Logout</a>
     </div>
     <h1>Asset page</h1>
     <h2>Modifier les infos</h2>
     <form action="/assets/changeQty" method="post">
-        Quantité : <input type="text" name="quantity" />
+        Quantité : <input type="text" name="quantity" placeholder="<%= qty %>" value="<%= qty %>"/>
+        <input type="hidden" name="old_qty" value="<%= qty %>">
+        <input type="hidden" name="invested_amount" value="<%= invested %>">
         <input type="hidden" name="aw_id" value="<%= id %>">
         <input type="hidden" name="wallet_id" value="<%= id_wallet %>">
         <input type="submit" value="Send new value">
     </form>
     <form action="/assets/changeInvestment" method="post">
-        Montant investit : <input type="text" name="invested_amount" />
+        Montant investit : <input type="text" name="invested_amount" placeholder="<%= invested %>" value="<%= invested %>"/>
         <input type="hidden" name="aw_id" value="<%= id %>">
+        <input type="hidden" name="quantity" value="<%= qty %>"/>
+        <input type="hidden" name="old_amount" value="<%= invested %>">
         <input type="hidden" name="wallet_id" value="<%= id_wallet %>">
         <input type="submit" value="Send new value">
     </form>
@@ -41,10 +47,12 @@
                 <p>PRU : <%= pru %> €</p>
         </div>
         <div class="modal__action">
-            <a class="vfm-btn" href="deleteAsset()">Delete asset ?</a>
             <a class="vfm-btn" href="javascript:history.back()">Go back</a>
         </div>
     </div>
+    <% if(typeof err_msg !== 'undefined') { %>
+            <p><%= err_msg %></p>
+    <% } %>
 
     <p>bouton d'alerte de prix</p>
     </div>

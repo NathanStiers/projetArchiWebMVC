@@ -19,11 +19,10 @@
         <h1>Login page</h1>
         <form action="/user/connect" method="post">
             <div>
-                Mail : <input type="email" name="mail">
+                Mail : <input type="email" name="mail" required>
                 Mot de passe : <input type="password" name="password">
             </div>
-            <p>Rester connecté</p>
-            <a href="/forgotPwd">J'ai oublié mon mdp</a>
+            <input type="submit" formaction="/user/forgotPwd" value="J'ai oublié mon mdp">
             <input type="submit" value="Envoyer les infos">
         </form>
     </div>

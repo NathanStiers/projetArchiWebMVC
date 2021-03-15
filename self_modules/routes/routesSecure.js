@@ -21,10 +21,13 @@ router.get('/wallets/add', (req, res) => {
 });
 router.get('/premium', (req, res) => res.render('premiumView.ejs'));
 router.get('/statistics', (req, res) => res.render('statisticsView.ejs'));
-router.get('/wallets/:id_wallet/:type', assetController.fetchWalletAllAssets);
-router.get('/wallets/delete/:id_wallet', walletController.deleteWallet);
-router.get('/assets/:id_wallet/:id_wallet_asset/:qty/:invested', (req, res) => res.render('assetInfoView.ejs', {id_wallet:req.params.id_wallet, id:req.params.id_wallet_asset, qty:req.params.qty, invested:req.params.invested}))
-router.post('/assets/add', isBelongingWallet, (req, res) => res.render('assetAddView.ejs'));
+router.get('/wallets/:id_wallet/', assetController.fetchWalletAllAssets);
+router.get('/wallets/:id_wallet/delete', walletController.deleteWallet);
+router.post('/assets/info', (req, res) => res.render('assetInfoView.ejs', {id_wallet:req.body.id_wallet, id:req.body.id_wallet_asset, qty:req.body.qty, invested:req.body.invested}))
+router.get('/logout', (req, res) => {
+    res.cookie('Token', null, { maxAge: 0 }); 
+    res.redirect('/')
+})
 
 // Routes Users
 router.post('/user/premium', userController.upgradeUser);

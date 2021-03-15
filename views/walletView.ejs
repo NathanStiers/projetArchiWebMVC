@@ -19,12 +19,14 @@
         <a class="routerlink" href="/statistics">Statistics</a>
         <span class="routerlink">|</span>
         <a class="routerlink" href="/premium">Premium</a>
+        <span class="routerlink">|</span>
+        <a class="routerlink" href="/logout">Logout</a>
     </div>
     <div class="wallet">
         <% for(let i=0 ; i < user.wallet_list.length ; i++) { %>
             <div class="walletCard walletItem" onclick=<% modal=true %>>
-                <a class="deleteCard" href="/wallets/delete/<%= user.wallet_list[i].id %>">X</a>
-                <a href="/wallets/<%= user.wallet_list[i].id %>/<%= user.wallet_list[i].type %>">
+                <a class="deleteCard" href="/wallets/<%= user.wallet_list[i].id %>/delete">X</a>
+                <a href="/wallets/<%= user.wallet_list[i].id %>">
                     <p>Portefeuille <%= i+1 %>
                     </p>
                     <p>
