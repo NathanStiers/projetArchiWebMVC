@@ -22,6 +22,11 @@
         <span class="routerlink">|</span>
         <a class="routerlink" href="/logout">Logout</a>
     </div>
+    <% if(typeof notification !== 'undefined'){ %>
+        <div class="notification">
+            <p><%= notification %></p>
+        </div>
+        <% } %>
     <div class="premium">
         <h1>Premium page</h1>
         <div>

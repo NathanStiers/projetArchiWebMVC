@@ -87,20 +87,20 @@ exports.connectUser = (req, res) => {
 // Body : id (from JWT)
 exports.upgradeUser = (req, res) => {
     let mapping_roles = req.body.mapping_roles
-    if (req.body.user_role === mapping_roles["premium"]) {
-        res.redirect('/premium')
+    if (req.body.user_role === "premium") {
+        res.render('premiumView.ejs', {notification :"Vous êtes déjà premium"})
         return;
     }
     db.db.query("UPDATE users SET role = ? WHERE id = ?;", [mapping_roles["premium"], req.body.user_id], (error, resultSQL) => {
         if (error) {
-            res.redirect('/premium')
+            res.render('premiumView.ejs', {notification : error + ". Please contact the webmaster"})
             return;
         } else {
             const token = jwt.sign({ user_id: req.body.user_id, user_role: "premium" }, process.env.ACCESS_TOKEN_SECRET);
             let d = new Date();
             let expires = d.setTime(d.getTime() + 6 * 60 * 60 * 1000);
             res.cookie('Token', token, { maxAge: expires });
-            res.redirect('/wallets')
+            res.render('premiumView.ejs', {notification :"Vous êtes maintenant premium"})
             return;
         }
     })

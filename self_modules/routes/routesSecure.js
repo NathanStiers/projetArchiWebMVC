@@ -13,6 +13,7 @@ const mappingRoles = require('../middlewares/mappingRoles')
 
 // Routes Views
 router.get('/wallets', maxWalletReached, walletController.fetchAllWallets);
+router.post('/wallets', maxWalletReached, walletController.fetchAllWallets);
 router.get('/premium', (req, res) => res.render('premiumView.ejs'));
 router.get('/statistics', (req, res) => res.render('statisticsView.ejs'));
 router.get('/wallets/:id_wallet/', assetController.fetchWalletAllAssets);

@@ -4,7 +4,7 @@ const toolbox = require('../toolbox')
 module.exports = (req, res, callback) => {
     let mail = req.body.mail
     if (!toolbox.checkMail(mail)) {
-        req.body.notification = error
+        req.body.notification = "L'email ne respecte pas le bon format"
         return callback()
     } else {
         db.db.query("SELECT * FROM users WHERE mail = ?;", mail, (error, resultSQL) => {
@@ -16,7 +16,6 @@ module.exports = (req, res, callback) => {
                     req.body.notification = "Cet utilisateur n'existe pas"
                     return callback()
                 } else {
-                    console.log(resultSQL)
                     let mapping_roles = req.body.mapping_roles
                     resultSQL[0].role = mapping_roles[resultSQL[0].role]
                     req.body.user = resultSQL[0]

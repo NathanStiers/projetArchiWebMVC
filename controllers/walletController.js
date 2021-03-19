@@ -22,23 +22,23 @@ exports.fetchAllWallets = (req, res) => {
         mapping_label_id_types = result;
         db.db.query("SELECT * FROM wallets WHERE user_id = ? ORDER BY creation_date ASC, id ASC LIMIT ?;", [user.id, user.role === "premium" ? 10 : 3], (error, resultSQL) => {
             if (error) {
-                res.render('walletView.ejs', { msg: error })
+                res.render('walletView.ejs', { user : null, max_reached: true, types : null, notification : error + ". Please contact the webmaster" })
                 return;
             } else {
                 toolbox.fetchAllTypes().then(result => {
                     resultSQL.forEach(w => {
                         user.wallet_list.push(new Wallet(w.id, mapping_label_id_types[w.type], w.label, w.creation_date, [], user.id))
                     });
-                    console.log(req.body.max_reached)
-                    res.render('walletView.ejs', { user, max_reached: req.body.max_reached, types: result })
+                    console.log(req.body.notification)
+                    res.render('walletView.ejs', { user, max_reached: req.body.max_reached, types: result, notification : req.body.notification })
                     return;
-                }).catch(err => {
-                    res.redirect('/wallets')
+                }).catch(error => {
+                    res.render('walletView.ejs', { user : null, max_reached: true, types : null, notification : error + ". Please contact the webmaster" })
                 });
             }
         });
     }).catch(error => {
-        res.render('walletView.ejs', { msg: error })
+        res.render('walletView.ejs', { user : null, max_reached: true, types : null, notification : error + ". Please contact the webmaster" })
         return;
     });
 }
@@ -48,7 +48,13 @@ exports.fetchAllWallets = (req, res) => {
 // Body : user_id, type, label
 exports.createWallet = (req, res) => {
     if(req.body.max_reached){
-        res.redirect('/wallets/add')
+        req.body.notification = "Vous avez atteint votre nombre maximum de portefeuille"
+        this.fetchAllWallets(req, res);
+        return;
+    }
+    if(req.body.label === ""){
+        req.body.notification = "Le label ne peut pas être vide"
+        this.fetchAllWallets(req, res);
         return;
     }
     toolbox.mapping_label_id_types().then(result => {
@@ -60,16 +66,19 @@ exports.createWallet = (req, res) => {
         let wallet = new Wallet(null, req.body.type, req.body.label, date, [], req.body.user_id);
         db.db.query("INSERT INTO wallets (type, user_id, label, creation_date) VALUES (?, ?, ?, ?);", [mapping_label_id_types[wallet.type], wallet.user_id, wallet.label, date], (error, resultSQL) => {
             if (error) {
-                res.redirect('/wallets/add')
+                req.body.notification = error + ". Please contact the webmaster"
+                this.fetchAllWallets(req, res);
                 return;
             } else {
+                req.body.notification = "Ajout effectué"
                 wallet.id = resultSQL.insertId;
-                res.redirect('/wallets')
+                this.fetchAllWallets(req, res);
                 return;
             }
         });
     }).catch(error => {
-        res.redirect('/wallets/add')
+        req.body.notification = error + ". Please contact the webmaster"
+        this.fetchAllWallets(req, res);
         return;
     });
 }
@@ -81,11 +90,12 @@ exports.deleteWallet = (req, res) => {
     let wallet = new Wallet(req.params.id_wallet, null, null, null, [], req.body.user_id);
     db.db.query("DELETE FROM wallets WHERE id = ? AND user_id = ?;", [wallet.id, wallet.user_id], (error, resultSQL) => {
         if (error) {
-            console.log(error)
-            res.redirect('/wallets')
+            req.body.notification = error + ". Please contact the webmaster"
+            this.fetchAllWallets(req, res);
             return;
         } else {
-            res.redirect('/wallets')
+            req.body.notification = "Suppression effectuée  "
+            this.fetchAllWallets(req, res);
             return;
         }
     });
