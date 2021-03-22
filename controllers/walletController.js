@@ -29,7 +29,6 @@ exports.fetchAllWallets = (req, res) => {
                     resultSQL.forEach(w => {
                         user.wallet_list.push(new Wallet(w.id, mapping_label_id_types[w.type], w.label, w.creation_date, [], user.id))
                     });
-                    console.log(req.body.notification)
                     res.render('walletView.ejs', { user, max_reached: req.body.max_reached, types: result, notification : req.body.notification })
                     return;
                 }).catch(error => {
@@ -64,6 +63,11 @@ exports.createWallet = (req, res) => {
             ('00' + (date.getUTCMonth() + 1)).slice(-2) + '-' +
             ('00' + date.getUTCDate()).slice(-2)
         let wallet = new Wallet(null, req.body.type, req.body.label, date, [], req.body.user_id);
+        if(wallet.type !== "Actions" && wallet.type !== "Crypto-actifs"){
+            req.body.notification = "Ce type n'est pas encore utilisable"
+            this.fetchAllWallets(req, res);
+            return;
+        }
         db.db.query("INSERT INTO wallets (type, user_id, label, creation_date) VALUES (?, ?, ?, ?);", [mapping_label_id_types[wallet.type], wallet.user_id, wallet.label, date], (error, resultSQL) => {
             if (error) {
                 req.body.notification = error + ". Please contact the webmaster"

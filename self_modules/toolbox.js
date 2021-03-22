@@ -107,7 +107,6 @@ exports.fetchAssetsBasedOnType = (id) => {
                 return;
             }
             else {
-                console.log(resultSQL[0].type)
                 db.db.query("SELECT * FROM assets WHERE type = ?;", resultSQL[0].type, (error, resultSQL) => {
                     if (error) {
                         reject(500)

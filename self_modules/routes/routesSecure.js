@@ -18,7 +18,13 @@ router.get('/premium', (req, res) => res.render('premiumView.ejs'));
 router.get('/statistics', (req, res) => res.render('statisticsView.ejs'));
 router.get('/wallets/:id_wallet/', assetController.fetchWalletAllAssets);
 router.get('/wallets/:id_wallet/delete', walletController.deleteWallet);
-router.post('/assets/info', (req, res) => res.render('assetInfoView.ejs', {id_wallet:req.body.id_wallet, id:req.body.id_wallet_asset, qty:req.body.qty, invested:req.body.invested}))
+router.post('/assets/info', (req, res) => {
+    let api = undefined
+    if(req.body.apiInfos != undefined){
+        api = JSON.parse(req.body.apiInfos)
+    }
+    res.render('assetInfoView.ejs', {api, asset : JSON.parse(req.body.assetInfos)})
+}) 
 router.get('/logout', (req, res) => {
     res.cookie('Token', null, { maxAge: 0 }); 
     res.redirect('/')

@@ -1,4 +1,5 @@
 -- MySQL Workbench Forward Engineering
+-- LAST UPDATE 22/03/2021
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -69,12 +70,12 @@ CREATE TABLE IF NOT EXISTS `ProjetArchiWeb`.`Wallets` (
   CONSTRAINT `type_w`
     FOREIGN KEY (`type`)
     REFERENCES `ProjetArchiWeb`.`Types` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `user_id_w`
     FOREIGN KEY (`user_id`)
     REFERENCES `ProjetArchiWeb`.`Users` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -92,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `ProjetArchiWeb`.`Assets` (
   CONSTRAINT `type_a`
     FOREIGN KEY (`type`)
     REFERENCES `ProjetArchiWeb`.`Types` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -109,16 +110,17 @@ CREATE TABLE IF NOT EXISTS `ProjetArchiWeb`.`Assets_wallets` (
   `price_alert` DOUBLE NULL,
   PRIMARY KEY (`id`),
   INDEX `id_wallet_idx` (`id_wallet` ASC) VISIBLE,
+  UNIQUE INDEX `ids_wallet_asset_UNIQUE` (`id_wallet` ASC, `id_asset` ASC) VISIBLE,
   INDEX `id_asset_idx` (`id_asset` ASC) VISIBLE,
   CONSTRAINT `id_wallet`
     FOREIGN KEY (`id_wallet`)
     REFERENCES `ProjetArchiWeb`.`Wallets` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `id_asset`
     FOREIGN KEY (`id_asset`)
     REFERENCES `ProjetArchiWeb`.`Assets` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 

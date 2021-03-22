@@ -16,7 +16,7 @@ let connect = ()=>{
 
         dbClient.connect((err)=>{
             if(err){
-                console.log("[Db] Unable to connect to server: " + err);
+                console.info("[Db] Unable to connect to server: " + err);
                 reject(err)
             }else{
                 console.info("[Db] Connected successfully to server")

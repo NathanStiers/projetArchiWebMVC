@@ -29,28 +29,33 @@
         <input type="hidden" name="wallet_id" value="<%= id_wallet %>">
         <input type="submit" value="Renommer">
     </form>
-    <br/>
+    <br />
     <div class="asset">
         <% for(let i=0 ; i < resultSQL.length ; i++) { %>
             <div>
                 <div class="assetCard assetItem">
                     <p>bouton d'alerte de prix</p>
                     <form method="POST" action="/assets/info">
-                    <input type="submit" value="X" formaction="/assets/remove">
-                    <input type="submit" value="More info">
-                    <input type="hidden" name="id_wallet" value="<%= resultSQL[i].id_wallet %>">
-                    <input type="hidden" name="wallet_id" value="<%= resultSQL[i].id_wallet %>">
-                    <input type="hidden" name="id_wallet_asset" value="<%= resultSQL[i].id %>">
-                    <input type="hidden" name="qty" value="<%= resultSQL[i].quantity %>">
-                    <input type="hidden" name="invested" value="<%= resultSQL[i].invested_amount %>">
+                        <input type="submit" value="X" formaction="/assets/remove">
+                        <input type="submit" value="More info">
+                        <% let jsonsql = JSON.stringify(resultSQL[i]) %>
+                        <input type="hidden" name="assetInfos" value="<%= jsonsql %>">
+                        <% if(typeof apiInfos !=='undefined' ) { %>
+                            <% let jsonapi = JSON.stringify(apiInfos[resultSQL[i].ticker]) %>
+                            <input type="hidden" name="apiInfos" value="<%= jsonapi %>">
+                        <% } %>
+                        <input type="hidden" name="wallet_id" value="<%= resultSQL[i].id_wallet %>">
                         <p>
-                        <%= resultSQL[i].label %> <i><small>
-                                    <%= resultSQL[i].ticker %>
-                                </small></i>
-                    </p>
-                    <p>Quantité : <%= resultSQL[i].quantity %> unités</p>
-                    <p>Montant investit : <%= resultSQL[i].invested_amount %> €</p>
-                    <!--<p>Valeur actuelle : <%= (resultSQL[i].quantity) //* apiData.price).toFixed(2) %> €</p>-->
+                            <%= resultSQL[i].label %> <i><small>
+                                        <%= resultSQL[i].ticker %>
+                                    </small></i>
+                        </p>
+                        <p>Quantité : <%= resultSQL[i].quantity %> unités</p>
+                        <p>Montant investit : <%= resultSQL[i].invested_amount %> €</p>
+                        <% if(typeof apiInfos !=='undefined' ) { %>
+                            <p>Valeur actuelle : <%= (apiInfos[resultSQL[i].ticker].price * resultSQL[i].quantity).toFixed(2) %> €</p>
+                        <% } %>
+                        
                     </form>
                 </div>
             </div>
@@ -62,13 +67,13 @@
                                 <option value="<%= assetsFromType[i].id %>">
                                     <%= assetsFromType[i].label %> (<%= assetsFromType[i].ticker %>)
                                 </option>
-                            <% } %>
+                                <% } %>
                         </select>
                         Quantité : <input type="number" name="quantity" id="" step="0.000000001">
                         Montant investit : <input type="number" name="invested_amount" id="" step="0.001">
                         <input type="hidden" name="wallet_id" value="<%= id_wallet %>">
                         <input type="submit" value="+ Ajouter un nouvel actif">
-                    </div> 
+                    </div>
                 </form>
     </div>
     </div>
