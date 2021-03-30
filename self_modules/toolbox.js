@@ -148,6 +148,25 @@ exports.cyptoValuesCall = () => {
     });
 }
 
+exports.actionValueCall = (ticker) => {
+    return new Promise((resolve, reject) => {
+        axios
+            .get("http://api.marketstack.com/v1/tickers/"+ticker+"/eod", {
+                params: {
+                    'access_key': process.env.MARKET_STACK_API_TOKEN
+                }
+            })
+            .then((response) => {
+                resolve(response.data.data)
+                return;
+            })
+            .catch((error) => {
+                reject(error)
+                return;
+            });
+    });
+}
+
 exports.readCookie = (cname) => {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);

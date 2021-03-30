@@ -10,12 +10,6 @@ let mapping_label_id_types = {};
 // Permet de récupérer les différents portefeuilles d'un utilisateur
 // Method : POST 
 // Body : user_id (from jwt)
-/**
- * 
- * Permet de récupérer les différents portefeuilles d'un utilisateur
- * Method : POST 
- * Body : user_id (from jwt)
- */
 exports.fetchAllWallets = (req, res) => {
     let user = new User(req.body.user_id, req.body.user_role, null, null, null, null, []);
     toolbox.mapping_label_id_types().then(result => {

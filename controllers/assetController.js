@@ -41,18 +41,17 @@ exports.fetchWalletAllAssets = (req, res) => {
                                     type: "Crypto-actifs"
                                 }
                             })
-                            res.render("assetView.ejs", {resultSQL, apiInfos : newDict, assetsFromType : assetsFromType.assets, id_wallet:req.params.id_wallet})
+                            res.render("assetView.ejs", { resultSQL, apiInfos: newDict, assetsFromType: assetsFromType.assets, id_wallet: req.params.id_wallet })
                             return;
                         }).catch(error => {
                             res.redirect('/wallets')
                             return;
                         })
-                    } else if ((mapping[assetsFromType.type]) === "Actions"){
-                        console.log("TODO APPEL API ACTIONS")
-                        res.render("assetView.ejs", {resultSQL, assetsFromType : assetsFromType.assets, id_wallet:req.params.id_wallet})
+                    } else if ((mapping[assetsFromType.type]) === "Actions") {
+                        res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.params.id_wallet })
                         return;
                     } else {
-                        res.render("assetView.ejs", {resultSQL, assetsFromType : assetsFromType.assets, id_wallet:req.params.id_wallet})
+                        res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.params.id_wallet })
                         return;
                     }
                 }).catch(error => {
@@ -68,27 +67,27 @@ exports.fetchWalletAllAssets = (req, res) => {
 
 exports.addAsset = (req, res) => {
     if (req.body.wallet_type !== req.body.asset_type) {
-        res.redirect('/wallets/'+req.body.wallet_id)
+        res.redirect('/wallets/' + req.body.wallet_id)
         return;
     }
     db.db.query("INSERT INTO assets_wallets (id_wallet, id_asset, quantity, invested_amount) VALUES(?,?,?,?);", [req.body.wallet_id, req.body.asset_id, req.body.quantity, req.body.invested_amount], (error, resultSQL) => {
         if (error) {
-            res.redirect('/wallets/'+req.body.wallet_id)
+            res.redirect('/wallets/' + req.body.wallet_id)
             return;
         } else {
-            res.redirect('/wallets/'+req.body.wallet_id)
+            res.redirect('/wallets/' + req.body.wallet_id)
             return;
         }
     });
 }
 
 exports.removeAsset = (req, res) => {
-    db.db.query("DELETE FROM assets_wallets WHERE id = ?;", [req.body.id_wallet_asset], (error, resultSQL) => {
+    db.db.query("DELETE FROM assets_wallets WHERE id = ?;", [JSON.parse(req.body.assetInfos).id], (error, resultSQL) => {
         if (error) {
-            res.redirect('/wallets/'+req.body.wallet_id)
+            res.redirect('/wallets/' + req.body.wallet_id)
             return;
         } else {
-            res.redirect('/wallets/'+req.body.wallet_id)
+            res.redirect('/wallets/' + req.body.wallet_id)
             return;
         }
     });
@@ -97,20 +96,20 @@ exports.removeAsset = (req, res) => {
 exports.changeQtyAsset = (req, res) => {
     let assetParsed = JSON.parse(req.body.assetInfos)
     let api = undefined
-    if(req.body.apiInfos != undefined){
+    if (req.body.apiInfos != undefined) {
         api = JSON.parse(req.body.apiInfos)
     }
     if (req.body.quantity <= 0) {
-        res.render('assetInfoView.ejs', {api, asset : assetParsed, err_msg:"La quantité est invalide"})
+        res.render('assetInfoView.ejs', { api, asset: assetParsed, err_msg: "La quantité est invalide" })
         return;
     }
-    db.db.query("UPDATE assets_wallets SET quantity = ? WHERE id = ?;", [req.body.quantity, assetParsed.aw_id], (error, resultSQL) => {
+    db.db.query("UPDATE assets_wallets SET quantity = ? WHERE id = ?;", [req.body.quantity, assetParsed.id], (error, resultSQL) => {
         if (error) {
-            res.render('assetInfoView.ejs', {api, asset : assetParsed, err_msg:"Erreur inconnue"})
+            res.render('assetInfoView.ejs', { api, asset: assetParsed, err_msg: "Erreur inconnue" })
             return;
         } else {
             assetParsed.quantity = req.body.quantity
-            res.render('assetInfoView.ejs', {api, asset : assetParsed})
+            res.render('assetInfoView.ejs', { api, asset: assetParsed })
             return;
         }
     });
@@ -150,22 +149,53 @@ exports.setPriceAlert = (req, res) => {
 exports.changeInitialInvestment = (req, res) => {
     let assetParsed = JSON.parse(req.body.assetInfos)
     let api = undefined
-    if(req.body.apiInfos != undefined){
+    if (req.body.apiInfos != undefined) {
         api = JSON.parse(req.body.apiInfos)
     }
     if (req.body.invested_amount <= 0) {
-        res.render('assetInfoView.ejs', {api, asset : assetParsed, err_msg:"Le montant est incorrect"})
+        res.render('assetInfoView.ejs', { api, asset: assetParsed, err_msg: "Le montant est incorrect" })
         return;
     }
-    db.db.query("UPDATE assets_wallets SET invested_amount = ? WHERE id = ?;", [req.body.invested_amount, req.body.aw_id], (error, resultSQL) => {
+    db.db.query("UPDATE assets_wallets SET invested_amount = ? WHERE id = ?;", [req.body.invested_amount, assetParsed.id], (error, resultSQL) => {
         if (error) {
-            res.render('assetInfoView.ejs', {api, asset : assetParsed, err_msg:"Le montant est incorrect"})
+            res.render('assetInfoView.ejs', { api, asset: assetParsed, err_msg: "Le montant est incorrect" })
             return;
         } else {
             assetParsed.invested_amount = req.body.invested_amount
-            res.render('assetInfoView.ejs', {api, asset : assetParsed})
+            res.render('assetInfoView.ejs', { api, asset: assetParsed })
             return;
         }
+    })
+}
+
+exports.infoAsset = (req, res) => {
+    let api = undefined
+    toolbox.mapping_label_id_types().then(mapping => {
+        if (req.body.apiInfos != undefined) {
+            api = JSON.parse(req.body.apiInfos)
+            res.render('assetInfoView.ejs', { api, asset: JSON.parse(req.body.assetInfos) })
+            return;
+        } else if (mapping[JSON.parse(req.body.assetInfos).type] === "Actions") {
+            toolbox.actionValueCall(JSON.parse(req.body.assetInfos).ticker).then(result => {
+                api = {
+                    name: JSON.parse(req.body.assetInfos).label,
+                    ticker: JSON.parse(req.body.assetInfos).ticker,
+                    max_supply: 0,
+                    total_supply: 0,
+                    market_cap: 0,
+                    price: result.eod[0].close || 0,
+                    type: "Actions"
+                }
+                res.render('assetInfoView.ejs', { api, asset: JSON.parse(req.body.assetInfos) })
+                return;
+            }).catch(error => {
+                res.redirect('/wallets/' + JSON.parse(req.body.assetInfos).id_wallet)
+                return;
+            })
+        }
+    }).catch(error => {
+        res.redirect('/wallets/' + JSON.parse(req.body.assetInfos).id_wallet)
+        return;
     })
 }
 

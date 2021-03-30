@@ -22,10 +22,23 @@
         <span class="routerlink">|</span>
         <a class="routerlink" href="/logout">Logout</a>
     </div>
+    <% if(typeof notification !=='undefined' ){ %>
+        <div class="notification">
+            <p>
+                <%= notification %>
+            </p>
+        </div>
+        <% } %>
     <div class="statistics">
         <h1>Statistics page</h1>
-        <p>informations statistiques</p>
-        <p>différents graphiques</p>
+        <p>Number of crypto-assets : <%= howMuchType["Crypto-actifs"] %></p>
+        <p>Number of actions : <%= howMuchType.Actions %></p>
+        <p>Number of unique assets : <%= countUniqueAssets %></p>
+        <p>Total P/L (of crypto-assets) : <%= totalProfit.toFixed(2) %>€</p>
+        <p>Best PRU : <%= pruComparison.best[0] %> => <%= pruComparison.best[1].toFixed(2) %>€</p>
+        <p>Worst PRU : <%= pruComparison.worst[0] %> => <%= pruComparison.worst[1].toFixed(2) %>€</p>
+        <p>Best value (of crypto-assets) : <%= valueComparison.best[0] %> => <%= valueComparison.best[1].toFixed(2) %>€</p>
+        <p>Worst value (of crypto-assets) : <%= valueComparison.worst[0] %> => <%= valueComparison.worst[1].toFixed(2) %>€</p>
     </div>
 </body>
 
