@@ -65,6 +65,52 @@ exports.fetchWalletAllAssets = (req, res) => {
     })
 }
 
+exports.searchAsset = (req, res) => {
+    toolbox.fetchAssetsBasedOnType(req.body.wallet_id).then(assetsFromType => {
+        db.db.query("SELECT DISTINCT a.ticker, a.label, aw.id_wallet, aw.id, aw.quantity, aw.invested_amount, aw.price_alert, w.type FROM assets AS a, wallets AS w, assets_wallets AS aw WHERE aw.id_wallet = ? AND aw.id_asset = a.id AND w.user_id = ? AND w.id = aw.id_wallet AND a.label LIKE ?;", [req.body.wallet_id, req.body.user_id, '%' + req.body.searchLike + '%'], (error, resultSQL) => {
+            if (error) {
+                res.redirect('/wallets')
+                return;
+            } else {
+                toolbox.mapping_label_id_types().then(mapping => {
+                    if ((mapping[assetsFromType.type]) === "Crypto-actifs") {
+                        let newDict = {}
+                        toolbox.cyptoValuesCall().then(cryptoAPI => {
+                            cryptoAPI.forEach(el => {
+                                newDict[el.symbol] = {
+                                    name: el.name,
+                                    ticker: el.symbol,
+                                    max_supply: el.max_supply,
+                                    total_supply: el.total_supply,
+                                    market_cap: el.quote.EUR.market_cap,
+                                    price: el.quote.EUR.price,
+                                    type: "Crypto-actifs"
+                                }
+                            })
+                            res.render("assetView.ejs", { resultSQL, apiInfos: newDict, assetsFromType: assetsFromType.assets, id_wallet: req.body.wallet_id })
+                            return;
+                        }).catch(error => {
+                            res.redirect('/wallets')
+                            return;
+                        })
+                    } else if ((mapping[assetsFromType.type]) === "Actions") {
+                        res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.body.wallet_id })
+                        return;
+                    } else {
+                        res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.body.wallet_id })
+                        return;
+                    }
+                }).catch(error => {
+                    res.redirect('/wallets')
+                    return;
+                })
+            }
+        });
+    }).catch(err => {
+        res.redirect('/wallets')
+    })
+}
+
 exports.addAsset = (req, res) => {
     if (req.body.wallet_type !== req.body.asset_type) {
         res.redirect('/wallets/' + req.body.wallet_id)

@@ -30,6 +30,11 @@
         <input type="submit" value="Renommer">
     </form>
     <br />
+    <form class="searchAsset" method="POST" action="/assets/search">
+        <input type="text" name="searchLike">
+        <input type="submit" value="Search">
+        <input type="hidden" name="wallet_id" value="<%= id_wallet %>">
+    </form>
     <div class="asset">
         <% for(let i=0 ; i < resultSQL.length ; i++) { %>
             <div>

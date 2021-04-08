@@ -36,6 +36,33 @@ exports.fetchAllWallets = (req, res) => {
     });
 }
 
+exports.searchWallet = (req, res) => {
+    let user = new User(req.body.user_id, req.body.user_role, null, null, null, null, []);
+    toolbox.mapping_label_id_types().then(result => {
+        mapping_label_id_types = result;
+        db.db.query("SELECT * FROM wallets WHERE user_id = ? AND label LIKE ? ORDER BY creation_date ASC, id ASC LIMIT ?;", [user.id, '%' + req.body.searchLike + '%', user.role === "premium" ? 10 : 3], (error, resultSQL) => {
+            if (error) {
+                res.render('walletView.ejs', { user : null, max_reached: true, types : null, notification : error + ". Please contact the webmaster" })
+                return;
+            } else {
+                console.log(resultSQL)
+                toolbox.fetchAllTypes().then(result => {
+                    resultSQL.forEach(w => {
+                        user.wallet_list.push(new Wallet(w.id, mapping_label_id_types[w.type], w.label, w.creation_date, [], user.id))
+                    });
+                    res.render('walletView.ejs', { user, max_reached: req.body.max_reached, types: result, notification : req.body.notification })
+                    return;
+                }).catch(error => {
+                    res.render('walletView.ejs', { user : null, max_reached: true, types : null, notification : error + ". Please contact the webmaster" })
+                });
+            }
+        });
+    }).catch(error => {
+        res.render('walletView.ejs', { user : null, max_reached: true, types : null, notification : error + ". Please contact the webmaster" })
+        return;
+    });
+}
+
 // Permet de créer un portefeuille vide si la limite de l'utilisateur n'est pas atteinte
 // Method : POST 
 // Body : user_id, type, label

@@ -28,10 +28,12 @@ router.get('/logout', (req, res) => {
 router.post('/user/premium', mappingRoles, userController.upgradeUser);
 
 // Routes Wallets
+router.post('/wallets/search', walletController.searchWallet)
 router.post('/wallets/create', maxWalletReached, walletController.createWallet);
 router.post('/wallets/rename', walletController.renameWallet);
-
+ 
 // Routes Assets
+router.post('/assets/search', assetController.searchAsset)
 router.post('/assets/add', isBelongingWallet, assetController.addAsset);
 router.post('/assets/remove', isBelongingWallet, assetController.removeAsset);
 router.post('/assets/changeQty', isBelongingWallet, assetController.changeQtyAsset);

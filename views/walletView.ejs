@@ -30,6 +30,10 @@
         </div>
         <% } %>
     <div class="wallet">
+        <form class="searchWallet" method="POST" action="/wallets/search">
+            <input type="text" name="searchLike">
+            <input type="submit" value="Search">
+        </form>
         <% for(let i=0 ; i < user.wallet_list.length ; i++) { %>
             <div class="walletCard walletItem" onclick=<% modal=true %>>
                 <a class="deleteCard" href="/wallets/<%= user.wallet_list[i].id %>/delete">X</a>
