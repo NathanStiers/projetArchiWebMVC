@@ -1,36 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/HomePage.css">
-    <title>My App</title>
-</head>
+<%- include('./fragments/headFragment.ejs', {stylesheet: 'HomePage.css'}); -%>
 
 <body>
-    <div id="appContainer">
-        <a id="logo" href="/" exact>
-            <img src="/images/logo.png" alt="" >
-        </a>
-    </div>
+    <%- include('./fragments/menu/menuRestrictFragment.ejs'); -%>
     <div class="home" id="homeContainer">
-        <div id="welcome">
-            <p>Bienvenue sur votre nouveau portefeuille d'investissements en ligne !</p>
-            <p>Notre application vous permettra de surveiller vos différents actifs quels que soit leurs types.</p>
-            <p>Par exemple :</p>
-            <ul>
-                <li>Les Actions</li>
-                <li>Les Crypto-actifs</li>
-                <li>Les Obligations</li>
-                <li>Et bien d'autres</li>
-            </ul>
-            <p>Une page de statistiques vous donnera accès à plus de détails sur vos bénéfices et votre diversification.
-            </p>
-            <p>N'attendez plus, l'inscription est gratuite. Plus de fonctionnalités vous seront proposées avec un compte
-                Premium (gratuit pout le moment, profitez-en).</p>
-        </div>
+        <%- include('./fragments/texts/welcomeTextFragment.ejs'); -%>
         <div id="subAndLog">
             <a class="button" href="/login">Se connecter</a>
             <a class="button" href="/subscribe">S'inscrire</a>

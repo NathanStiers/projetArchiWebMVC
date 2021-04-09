@@ -1,38 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/LoginPage.css">
-    <title>My App</title>
-</head>
+<%- include('./fragments/headFragment.ejs', {stylesheet: 'LoginPage.css'}); -%>
 
 <body>
-    <div id="appContainer">
-        <a id="logo" href="/" exact>
-            <img src="/images/logo.png" alt="">
-        </a>
+    <%- include('./fragments/menu/menuRestrictFragment.ejs'); -%>
+    <%- include('./fragments/notificationFragment.ejs'); -%>
+    <div class="login">
+        <h1>Login page</h1>
+        <%- include('./fragments/forms/loginFormFragment.ejs'); -%>
     </div>
-    <% if(typeof notification !=='undefined' ){ %>
-        <div class="notification">
-            <p>
-                <%= notification %>
-            </p>
-        </div>
-        <% } %>
-            <div class="login">
-                <h1>Login page</h1>
-                <form action="/user/connect" method="post">
-                    <div>
-                        Mail : <input type="email" name="mail" required>
-                        Mot de passe : <input type="password" name="password">
-                    </div>
-                    <input type="submit" formaction="/user/forgotPwd" value="J'ai oublié mon mdp">
-                    <input type="submit" value="Envoyer les infos">
-                </form>
-            </div>
 </body>
 
 </html>

@@ -1,27 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/AssetPage.css">
-    <title>My App</title>
-</head>
+<%- include('./fragments/headFragment.ejs', {stylesheet: 'AssetPage.css'}); -%>
+
 
 <body>
-    <div id="appContainer">
-        <a id="logo" href="/">
-            <img src="/images/logo.png" alt="">
-        </a>
-        <a class="routerlink" href="/wallets">Gestion</a>
-        <span class="routerlink">|</span>
-        <a class="routerlink" href="/statistics">Statistics</a>
-        <span class="routerlink">|</span>
-        <a class="routerlink" href="/premium">Premium</a>
-        <span class="routerlink">|</span>
-        <a class="routerlink" href="/logout">Logout</a>
-    </div>
+    <%- include('./fragments/menu/menuFragment.ejs'); -%>
     <h1>Asset page</h1>
     <form action="/wallets/rename" method="POST">
         Renommer le wallet : <input type="text" name="label" id="">

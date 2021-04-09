@@ -1,44 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/StatisticsPage.css">
-    <title>My App</title>
-</head>
+<%- include('./fragments/headFragment.ejs', {stylesheet: 'StatisticsPage.css'}); -%>
 
 <body>
-    <div id="appContainer">
-        <a id="logo" href="/">
-            <img src="/images/logo.png" alt="">
-        </a>
-        <a class="routerlink" href="/wallets">Gestion</a>
-        <span class="routerlink">|</span>
-        <a class="routerlink" href="/statistics">Statistics</a>
-        <span class="routerlink">|</span>
-        <a class="routerlink" href="/premium">Premium</a>
-        <span class="routerlink">|</span>
-        <a class="routerlink" href="/logout">Logout</a>
-    </div>
-    <% if(typeof notification !=='undefined' ){ %>
-        <div class="notification">
-            <p>
-                <%= notification %>
-            </p>
-        </div>
-        <% } %>
+    <%- include('./fragments/menu/menuFragment.ejs'); -%>
+    <%- include('./fragments/notificationFragment.ejs'); -%>
     <div class="statistics">
         <h1>Statistics page</h1>
-        <p>Number of crypto-assets : <%= howMuchType["Crypto-actifs"] %></p>
-        <p>Number of actions : <%= howMuchType.Actions %></p>
-        <p>Number of unique assets : <%= countUniqueAssets %></p>
-        <p>Total P/L (of crypto-assets) : <%= totalProfit.toFixed(2) %>€</p>
-        <p>Best PRU : <%= pruComparison.best[0] %> => <%= pruComparison.best[1].toFixed(2) %>€</p>
-        <p>Worst PRU : <%= pruComparison.worst[0] %> => <%= pruComparison.worst[1].toFixed(2) %>€</p>
-        <p>Best value (of crypto-assets) : <%= valueComparison.best[0] %> => <%= valueComparison.best[1].toFixed(2) %>€</p>
-        <p>Worst value (of crypto-assets) : <%= valueComparison.worst[0] %> => <%= valueComparison.worst[1].toFixed(2) %>€</p>
+        <%- include('./fragments/statisticsFragment.ejs'); -%>
     </div>
 </body>
 

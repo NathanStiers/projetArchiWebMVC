@@ -1,34 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/WalletPage.css">
-    <title>My App</title>
-</head>
+<%- include('./fragments/headFragment.ejs', {stylesheet: 'WalletPage.css'}); -%>
 
 <body>
-    <div id="appContainer">
-        <a id="logo" href="/">
-            <img src="/images/logo.png" alt="">
-        </a>
-        <a class="routerlink" href="/wallets">Gestion</a>
-        <span class="routerlink">|</span>
-        <a class="routerlink" href="/statistics">Statistics</a>
-        <span class="routerlink">|</span>
-        <a class="routerlink" href="/premium">Premium</a>
-        <span class="routerlink">|</span>
-        <a class="routerlink" href="/logout">Logout</a>
-    </div>
-    <% if(typeof notification !=='undefined' ){ %>
-        <div class="notification">
-            <p>
-                <%= notification %>
-            </p>
-        </div>
-        <% } %>
+    <%- include('./fragments/menu/menuFragment.ejs'); -%>
+    <%- include('./fragments/notificationFragment.ejs'); -%>
     <div class="wallet">
         <form class="searchWallet" method="POST" action="/wallets/search">
             <input type="text" name="searchLike">
