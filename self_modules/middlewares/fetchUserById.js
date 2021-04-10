@@ -1,6 +1,13 @@
 const db = require('../db');
 const toolbox = require('../toolbox')
 
+/**
+ * Fetch the data of a user based on his id
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ * @param {Function} callback The next function
+ */
 module.exports = (req, res, callback) => {
     let id = req.body.user_id
     if (!toolbox.checkMail(id)) {

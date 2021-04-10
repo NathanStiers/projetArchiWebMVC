@@ -2,13 +2,25 @@ const nodemailer = require('nodemailer');
 const db = require('../self_modules/db');
 const axios = require('axios');
 
-// Permet de vérifier la conformité d'un mail
+/**
+ * Allows you to check the conformity of an email
+ * 
+ * @param {string} mail The mail of the user 
+ * @returns {boolean} True if the mail is correct, false otherwise
+ */
 exports.checkMail = (mail) => {
     var re = /\S+@\S+\.\S+/;
     return re.test(mail);
 }
 
-// Permet d'envoyer un mail personnalisé
+/**
+ * Allows you to send a personalized email
+ * 
+ * @param {string} to The mail of the receiver
+ * @param {string} subject The subject of the mail
+ * @param {string} text The content of the mail
+ * @returns {Promise} Send the mail and return a promise
+ */
 exports.sendMail = (to, subject, text) => {
     let mailOptions = {
         from: process.env.NODE_MAILER_USER,
@@ -37,7 +49,11 @@ exports.sendMail = (to, subject, text) => {
     });
 }
 
-// Permet de faire un mapping des types entre label et id.
+/**
+ * Allows to map types between label and id
+ * 
+ * @returns {Promise} Make the mapping and return a promise
+ */
 exports.mapping_label_id_types = () => {
     return new Promise((resolve, reject) => {
         db.db.query("SELECT * FROM types;", (error, resultSQL) => {
@@ -58,8 +74,11 @@ exports.mapping_label_id_types = () => {
     });
 }
 
-
-// Permet de faire un mapping des roles entre label et id.
+/**
+ * Allows to map roles between label and id
+ * 
+ * @returns {Promise} Make the mapping and return a promise
+ */
 exports.mapping_label_id_roles = () => {
     return new Promise((resolve, reject) => {
         db.db.query("SELECT * FROM roles;", (error, resultSQL) => {
@@ -80,6 +99,11 @@ exports.mapping_label_id_roles = () => {
     });
 }
 
+/**
+ * Allows you to retrieve all types of assets from the database
+ * 
+ * @returns {Promise} Fetch all the assets and return a promise
+ */
 exports.fetchAllTypes = () => {
     return new Promise((resolve, reject) => {
         db.db.query("SELECT * FROM types;", (error, resultSQL) => {
@@ -99,6 +123,12 @@ exports.fetchAllTypes = () => {
     });
 }
 
+/**
+ * Retrieves the assets in the database with the same type as the selected portfolio
+ * 
+ * @param {number} id The id of the wallet 
+ * @returns {Promise} Fetch all the assets and return a promise
+ */
 exports.fetchAssetsBasedOnType = (id) => {
     return new Promise((resolve, reject) => {
         db.db.query("SELECT type FROM wallets WHERE id = ?;", id, (error, resultSQL) => {
@@ -126,6 +156,11 @@ exports.fetchAssetsBasedOnType = (id) => {
     });
 }
 
+/**
+ * Makes a call to an external API to retrieve data from the top 100 crypto-assets in real time
+ * 
+ * @returns {Promise} Fetch the data from the external API and return a promise
+ */
 exports.cyptoValuesCall = () => {
     return new Promise((resolve, reject) => {
         axios
@@ -148,6 +183,12 @@ exports.cyptoValuesCall = () => {
     });
 }
 
+/**
+ * Makes a call to an external API to retrieve real-time action data
+ * 
+ * @param {string} ticker The ticker of the stock
+ * @returns {Promise} Fetch the data from the external API and return a promise
+ */
 exports.actionValueCall = (ticker) => {
     return new Promise((resolve, reject) => {
         axios
@@ -167,6 +208,12 @@ exports.actionValueCall = (ticker) => {
     });
 }
 
+/**
+ * Allows you to retrieve information from a cookie
+ * 
+ * @param {string} cname The name of the cookie
+ * @returns {string} The data of the cookie or undefined if it doesn't exists
+ */
 exports.readCookie = (cname) => {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -183,6 +230,11 @@ exports.readCookie = (cname) => {
     return undefined;
 }
 
+/**
+ * Checks if the user is logged in 
+ * 
+ * @returns {boolean} True if the user is connected, false otherwise
+ */
 exports.checkIfConnected = () => {
     let token = this.readCookie("Token")
     if (token !== undefined) {
@@ -191,6 +243,12 @@ exports.checkIfConnected = () => {
     return false;
 }
 
+/**
+ * Transforms data from external APIs to standardize the structure
+ * 
+ * @param {Object} dictToTransform The JSON response from external API
+ * @returns {Object} The modified JSON Object
+ */
 exports.transformDictFromCryptoAPI = (dictToTransform) => {
     let newDict = {}
     dictToTransform.forEach(el => {

@@ -5,8 +5,6 @@ let userController = require('../../controllers/userController');
 let walletController = require('../../controllers/walletController');
 let assetController = require('../../controllers/assetController');
 
-const toolbox = require("../toolbox");
-
 const isBelongingWallet = require('../middlewares/isBelongingWallet')
 const maxWalletReached = require('../middlewares/maxWalletReached')
 const mappingRoles = require('../middlewares/mappingRoles')
@@ -19,10 +17,7 @@ router.get('/statistics', userController.statisticsResults);
 router.get('/wallets/:id_wallet/', assetController.fetchWalletAllAssets);
 router.get('/wallets/:id_wallet/delete', walletController.deleteWallet);
 router.post('/assets/info', assetController.infoAsset); 
-router.get('/logout', (req, res) => {
-    res.cookie('Token', null, { maxAge: 0 }); 
-    res.redirect('/')
-})
+router.get('/logout', userController.logOutUser);
 
 // Routes Users
 router.post('/user/premium', mappingRoles, userController.upgradeUser);

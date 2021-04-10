@@ -23,6 +23,9 @@ app.use('/', router);
 app.use(authorize);
 app.use('/', routerSecure);
 
+/**
+ * Start the server
+ */
 exports.start = function () {
     app.listen(port, host, () => {
         console.info(`[SERVER] Listening on http://${host}:${port}`);

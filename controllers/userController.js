@@ -208,3 +208,8 @@ exports.statisticsResults = (req, res) => {
         }
     })
 }
+
+exports.logOutUser = (req, res) => {
+    res.cookie('Token', null, { maxAge: 0 }); 
+    res.redirect('/')
+}

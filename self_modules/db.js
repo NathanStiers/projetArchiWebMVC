@@ -5,6 +5,11 @@ const dbUser = process.env.DB_USER
 const dbPwd = process.env.DB_PWD
 const dbName = process.env.DB_NAME
 
+/**
+ * Connect the server with the database
+ * 
+ * @returns {Promise} Connect the DB and return a promise
+ */
 let connect = ()=>{
     return new Promise((resolve, reject) => {
         let dbClient = mysql.createConnection({

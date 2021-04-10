@@ -1,5 +1,12 @@
 const db = require('../db');
 
+/**
+ * Allows to map types between label and id
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ * @param {Function} callback The next function
+ */
 module.exports = (req, res, callback) => {
     db.db.query("SELECT * FROM types;", (error, resultSQL) => {
         if (error) {
