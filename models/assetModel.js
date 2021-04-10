@@ -1,3 +1,7 @@
+/**
+ * Permet la création d'une instance d'actif
+ */
+
 class Asset{
     constructor(id, type, label, ticker, quantity, unit_cost_price, price_alert){
         this.id = id;

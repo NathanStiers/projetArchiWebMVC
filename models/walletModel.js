@@ -1,3 +1,7 @@
+/**
+ * Permet la création d'une instance de portefeuille
+ */
+
 class Wallet{
     constructor(id, type, label, creation_date, asset_list, user_id){
         this.id = id;

@@ -7,10 +7,14 @@
     <%- include('./fragments/menu/menuFragment.ejs'); -%>
     <%- include('./fragments/notificationFragment.ejs'); -%>
     <div class="wallet">
+
+        <!-- Search form -->
         <form class="searchWallet" method="POST" action="/wallets/search">
             <input type="text" name="searchLike">
             <input type="submit" value="Search">
         </form>
+
+        <!-- Shows all the user's wallets -->
         <% for(let i=0 ; i < user.wallet_list.length ; i++) { %>
             <div class="walletCard walletItem">
                 <a class="deleteCard" href="/wallets/<%= user.wallet_list[i].id %>/delete">X</a>
@@ -21,6 +25,8 @@
                 </a>
             </div>
         <% } %>
+
+        <!-- Add wallet form -->
         <% if(!max_reached){ %>
             <div class="addWallet walletItem">
                 <form class="modal-container" method="POST" action="/wallets/create">

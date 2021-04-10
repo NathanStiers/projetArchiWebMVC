@@ -1,12 +1,5 @@
-# TODO
-- Rendre unique la paire wallet_id, asset_id dans aw
-- Avoir plus d'infos sur un actif
-- Rechercher un actif
-- Trier les actifs
-- Utiliser les datalist
-- Faire la page de statistiques
-- Créer les alertes de prix
-- Rapport MVC
-- Refactorer l'application
-- Add CSS
-- Au lieu de faire des redirect dans les erreurs, ajouter un req.body.notification ; Idem pour les render.
+# How to launch the server
+Blabla
+
+# How to navigate on the website
+Blabla

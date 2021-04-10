@@ -1,3 +1,7 @@
+/**
+ * Permet la création d'une instance d'utilisateur
+ */
+
 class User{
     constructor(id, role, name, surname, mail, password, wallet_list){
         this.id = id;

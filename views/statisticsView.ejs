@@ -8,6 +8,8 @@
     <%- include('./fragments/notificationFragment.ejs'); -%>
     <div class="statistics">
         <h1>Statistics page</h1>
+
+        <!-- Calculate some statistics based on user's assets -->
         <% if(typeof howMuchType !=='undefined' && countUniqueAssets){ %>
             <p>Number of crypto-assets : <%= howMuchType["Crypto-actifs"] %></p>
             <p>Number of actions : <%= howMuchType.Actions %></p>
