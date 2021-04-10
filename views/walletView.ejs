@@ -12,39 +12,34 @@
             <input type="submit" value="Search">
         </form>
         <% for(let i=0 ; i < user.wallet_list.length ; i++) { %>
-            <div class="walletCard walletItem" onclick=<% modal=true %>>
+            <div class="walletCard walletItem">
                 <a class="deleteCard" href="/wallets/<%= user.wallet_list[i].id %>/delete">X</a>
                 <a href="/wallets/<%= user.wallet_list[i].id %>">
-                    <p>Portefeuille <%= i+1 %>
-                    </p>
-                    <p>
-                        <%= user.wallet_list[i].label %>
-                    </p>
-                    <p>Type : <%= user.wallet_list[i].type %>
-                    </p>
+                    <p>Portefeuille <%= i+1 %></p>
+                    <p><%= user.wallet_list[i].label %></p>
+                    <p>Type : <%= user.wallet_list[i].type %></p>
                 </a>
             </div>
-
-            <% } %>
-            <% if(!max_reached){ %>
-                    <div class="addWallet walletItem">
-                        <form class="modal-container" method="POST" action="/wallets/create">
-                            <span class="modal__title">Create a new wallet</span>
-                            <div class="modal__content">
-                              Label : <input type="text" name="label" id="" maxlength="50" >
-                              <br/><br/>
-                              Type : <select name="type" id="">
-                                  <% for(let i=0 ; i < types.length ; i++) { %>
-                                      <option value="<%= types[i] %>" ><%= types[i] %></option>
-                                  <% } %>
-                              </select>
-                            </div>
-                            <div class="modal__action">
-                              <input class="vfm-btn" type="submit" value="confirm">
-                            </div>
-                          </form>
+        <% } %>
+        <% if(!max_reached){ %>
+            <div class="addWallet walletItem">
+                <form class="modal-container" method="POST" action="/wallets/create">
+                    <span class="modal__title">Create a new wallet</span>
+                    <div class="modal__content">
+                      Label : <input type="text" name="label" id="" maxlength="50" >
+                      <br/><br/>
+                      Type : <select name="type" id="">
+                          <% for(let i=0 ; i < types.length ; i++) { %>
+                              <option value="<%= types[i] %>" ><%= types[i] %></option>
+                          <% } %>
+                      </select>
                     </div>
-            <% } %>
+                    <div class="modal__action">
+                      <input class="vfm-btn" type="submit" value="confirm">
+                    </div>
+                </form>
+            </div>
+        <% } %>
     </div>
 </body>
 

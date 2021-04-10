@@ -5,18 +5,19 @@
 
 <body>
     <%- include('./fragments/menu/menuFragment.ejs'); -%>
+    <%- include('./fragments/notificationFragment.ejs'); -%>
     <h1>Asset page</h1>
     <h2>Modifier les infos</h2>
     <form action="/assets/changeQty" method="post">
         Quantité : <input type="text" name="quantity" placeholder="<%= asset.quantity %>" value="<%= asset.quantity %>" />
-                <input type="hidden" name="wallet_id" value="<%= asset.id_wallet %>">
-                <% let jsonsql=JSON.stringify(asset) %>
-                <input type="hidden" name="assetInfos" value="<%= jsonsql %>">
-                <% if(typeof apiInfos !=='undefined' ) { %>
-                    <% let jsonapi=JSON.stringify(api) %>
-                    <input type="hidden" name="apiInfos" value="<%= jsonapi %>">
-                <% } %>
-                <input type="submit" value="Send new value">
+        <input type="hidden" name="wallet_id" value="<%= asset.id_wallet %>">
+        <% let jsonsql=JSON.stringify(asset) %>
+        <input type="hidden" name="assetInfos" value="<%= jsonsql %>">
+        <% if(typeof apiInfos !=='undefined' ) { %>
+            <% let jsonapi=JSON.stringify(api) %>
+            <input type="hidden" name="apiInfos" value="<%= jsonapi %>">
+        <% } %>
+        <input type="submit" value="Send new value">
     </form>
     <form action="/assets/changeInvestment" method="post">
         Montant investit : <input type="text" name="invested_amount" placeholder="<%= asset.invested_amount %>" value="<%= asset.invested_amount %>" />
@@ -35,21 +36,11 @@
             <% if(typeof api !=='undefined' ) { %>
                 <p>Valeur actuelle : <%= (api.price * asset.quantity).toFixed(2) %> €</p>
             <% } %>
-           
         </div>
         <div class="modal__action">
             <a class="vfm-btn" href="javascript:history.back()">Go back</a>
         </div>
     </div>
-    <% if(typeof err_msg !=='undefined' ) { %>
-        <p>
-            <%= err_msg %>
-        </p>
-        <% } %>
-
-            <p>bouton d'alerte de prix</p>
-            </div>
-
 </body>
 
 </html>

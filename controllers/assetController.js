@@ -146,12 +146,12 @@ exports.changeQtyAsset = (req, res) => {
         api = JSON.parse(req.body.apiInfos)
     }
     if (req.body.quantity <= 0) {
-        res.render('assetInfoView.ejs', { api, asset: assetParsed, err_msg: "La quantité est invalide" })
+        res.render('assetInfoView.ejs', { api, asset: assetParsed, notification: "La quantité est invalide" })
         return;
     }
     db.db.query("UPDATE assets_wallets SET quantity = ? WHERE id = ?;", [req.body.quantity, assetParsed.id], (error, resultSQL) => {
         if (error) {
-            res.render('assetInfoView.ejs', { api, asset: assetParsed, err_msg: "Erreur inconnue" })
+            res.render('assetInfoView.ejs', { api, asset: assetParsed, notification: "Erreur inconnue" })
             return;
         } else {
             assetParsed.quantity = req.body.quantity
@@ -199,12 +199,12 @@ exports.changeInitialInvestment = (req, res) => {
         api = JSON.parse(req.body.apiInfos)
     }
     if (req.body.invested_amount <= 0) {
-        res.render('assetInfoView.ejs', { api, asset: assetParsed, err_msg: "Le montant est incorrect" })
+        res.render('assetInfoView.ejs', { api, asset: assetParsed, notification: "Le montant est incorrect" })
         return;
     }
     db.db.query("UPDATE assets_wallets SET invested_amount = ? WHERE id = ?;", [req.body.invested_amount, assetParsed.id], (error, resultSQL) => {
         if (error) {
-            res.render('assetInfoView.ejs', { api, asset: assetParsed, err_msg: "Le montant est incorrect" })
+            res.render('assetInfoView.ejs', { api, asset: assetParsed, notification: "Le montant est incorrect" })
             return;
         } else {
             assetParsed.invested_amount = req.body.invested_amount
