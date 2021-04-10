@@ -160,14 +160,14 @@ exports.statisticsResults = (req, res) => {
                             //total_supply: el.total_supply,
                             //market_cap: el.quote.EUR.market_cap,
                             price: el.quote.EUR.price,
-                            //type: "Crypto-actifs"
+                            //type: "Crypto-assets"
                         }
                     })
                     // faire la proportion des actifs présents && combien d'actif de chaque je possède
                     let howMuchType = {
-                        "Crypto-actifs": resultSQL.filter(el => mapping[el.type] === "Crypto-actifs").length,
-                        "Actions": resultSQL.filter(el => mapping[el.type] === "Actions").length,
-                        "OSEF": resultSQL.filter(el => mapping[el.type] === "OSEF").length
+                        "Crypto-assets": resultSQL.filter(el => mapping[el.type] === "Crypto-assets").length,
+                        "Stocks": resultSQL.filter(el => mapping[el.type] === "Stocks").length,
+                        "TODO": resultSQL.filter(el => mapping[el.type] === "TODO").length
                     }
                     // calculer mes bénéfices totaux
                     // meilleur/pire PRU -> ticker, amount
@@ -182,7 +182,7 @@ exports.statisticsResults = (req, res) => {
                         "worst": ['error', Number.MAX_VALUE]
                     }
                     resultSQL.forEach(el => {
-                        if (mapping[el.type] === "Crypto-actifs") {
+                        if (mapping[el.type] === "Crypto-assets") {
                             totalProfit += (el.quantity * newDict[el.ticker].price) - (el.invested_amount)
                             pruComparison.worst = (pruComparison.worst[1] < (el.invested_amount / el.quantity)) ? [el.ticker, (el.invested_amount / el.quantity)] : pruComparison.worst
                             pruComparison.best = (pruComparison.best[1] > (el.invested_amount / el.quantity)) ? [el.ticker, (el.invested_amount / el.quantity)] : pruComparison.best

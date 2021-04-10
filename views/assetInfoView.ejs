@@ -7,11 +7,11 @@
     <%- include('./fragments/menu/menuFragment.ejs'); -%>
     <%- include('./fragments/notificationFragment.ejs'); -%>
     <h1>Asset page</h1>
-    <h2>Modifier les infos</h2>
+    <h2>Edit info</h2>
 
     <!-- Change the quantity of a specific asset form -->
     <form action="/assets/changeQty" method="post">
-        Quantité : <input type="text" name="quantity" placeholder="<%= asset.quantity %>" value="<%= asset.quantity %>" />
+        Quantity : <input type="text" name="quantity" placeholder="<%= asset.quantity %>" value="<%= asset.quantity %>" />
         <input type="hidden" name="wallet_id" value="<%= asset.id_wallet %>">
         <% let jsonsql=JSON.stringify(asset) %>
         <input type="hidden" name="assetInfos" value="<%= jsonsql %>">
@@ -24,7 +24,7 @@
 
     <!-- Change the initial investment of a specific asset form -->
     <form action="/assets/changeInvestment" method="post">
-        Montant investit : <input type="text" name="invested_amount" placeholder="<%= asset.invested_amount %>" value="<%= asset.invested_amount %>" />
+        Amount invested : <input type="text" name="invested_amount" placeholder="<%= asset.invested_amount %>" value="<%= asset.invested_amount %>" />
         <input type="hidden" name="wallet_id" value="<%= asset.id_wallet %>">    
         <input type="hidden" name="assetInfos" value="<%= jsonsql %>">
         <% if(typeof apiInfos !=='undefined' ) { %>
@@ -38,9 +38,9 @@
         <span class="modal__title">Deeper information</span>
         <div class="modal__content">
             <% let pru = asset.invested_amount/asset.quantity %>
-            <p>PRU : <%= pru %> €</p>
+            <p>Unit cost price : <%= pru %> €</p>
             <% if(typeof api !=='undefined' ) { %>
-                <p>Valeur actuelle : <%= (api.price * asset.quantity).toFixed(2) %> €</p>
+                <p>Current value : <%= (api.price * asset.quantity).toFixed(2) %> €</p>
             <% } %>
         </div>
         <div class="modal__action">

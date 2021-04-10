@@ -259,7 +259,7 @@ exports.transformDictFromCryptoAPI = (dictToTransform) => {
             total_supply: el.total_supply,
             market_cap: el.quote.EUR.market_cap,
             price: el.quote.EUR.price,
-            type: "Crypto-actifs"
+            type: "Crypto-assets"
         }
     })
     return newDict;

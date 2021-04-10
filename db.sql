@@ -138,11 +138,11 @@ INSERT INTO `ProjetArchiWeb`.`Roles` (id, label) VALUES (2, 'premium');
 -- -----------------------------------------------------
 -- INSERTS `ProjetArchiWeb`.`Types`
 -- -----------------------------------------------------
-INSERT INTO `ProjetArchiWeb`.`Types` (id, label) VALUES (1, 'Actions');
-INSERT INTO `ProjetArchiWeb`.`Types` (id, label) VALUES (2, 'Crypto-actifs');
+INSERT INTO `ProjetArchiWeb`.`Types` (id, label) VALUES (1, 'Stocks');
+INSERT INTO `ProjetArchiWeb`.`Types` (id, label) VALUES (2, 'Crypto-assets');
 INSERT INTO `ProjetArchiWeb`.`Types` (id, label) VALUES (3, 'ETF');
-INSERT INTO `ProjetArchiWeb`.`Types` (id, label) VALUES (4, 'Obligations');
-INSERT INTO `ProjetArchiWeb`.`Types` (id, label) VALUES (5, 'Métaux');
+INSERT INTO `ProjetArchiWeb`.`Types` (id, label) VALUES (4, 'Bonds');
+INSERT INTO `ProjetArchiWeb`.`Types` (id, label) VALUES (5, 'Metals');
 INSERT INTO `ProjetArchiWeb`.`Types` (id, label) VALUES (6, 'Crowdlending');
 
 -- -----------------------------------------------------

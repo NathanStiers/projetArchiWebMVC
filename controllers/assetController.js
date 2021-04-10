@@ -27,7 +27,7 @@ exports.fetchWalletAllAssets = (req, res) => {
                 return;
             } else {
                 toolbox.mapping_label_id_types().then(mapping => {
-                    if ((mapping[assetsFromType.type]) === "Crypto-actifs") {
+                    if ((mapping[assetsFromType.type]) === "Crypto-assets") {
                         let newDict = {}
                         toolbox.cyptoValuesCall().then(cryptoAPI => {
                             cryptoAPI.forEach(el => {
@@ -38,7 +38,7 @@ exports.fetchWalletAllAssets = (req, res) => {
                                     total_supply: el.total_supply,
                                     market_cap: el.quote.EUR.market_cap,
                                     price: el.quote.EUR.price,
-                                    type: "Crypto-actifs"
+                                    type: "Crypto-assets"
                                 }
                             })
                             res.render("assetView.ejs", { resultSQL, apiInfos: newDict, assetsFromType: assetsFromType.assets, id_wallet: req.params.id_wallet })
@@ -47,7 +47,7 @@ exports.fetchWalletAllAssets = (req, res) => {
                             res.redirect('/wallets')
                             return;
                         })
-                    } else if ((mapping[assetsFromType.type]) === "Actions") {
+                    } else if ((mapping[assetsFromType.type]) === "Stocks") {
                         res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.params.id_wallet })
                         return;
                     } else {
@@ -73,7 +73,7 @@ exports.searchAsset = (req, res) => {
                 return;
             } else {
                 toolbox.mapping_label_id_types().then(mapping => {
-                    if ((mapping[assetsFromType.type]) === "Crypto-actifs") {
+                    if ((mapping[assetsFromType.type]) === "Crypto-assets") {
                         let newDict = {}
                         toolbox.cyptoValuesCall().then(cryptoAPI => {
                             cryptoAPI.forEach(el => {
@@ -84,7 +84,7 @@ exports.searchAsset = (req, res) => {
                                     total_supply: el.total_supply,
                                     market_cap: el.quote.EUR.market_cap,
                                     price: el.quote.EUR.price,
-                                    type: "Crypto-actifs"
+                                    type: "Crypto-assets"
                                 }
                             })
                             res.render("assetView.ejs", { resultSQL, apiInfos: newDict, assetsFromType: assetsFromType.assets, id_wallet: req.body.wallet_id })
@@ -93,7 +93,7 @@ exports.searchAsset = (req, res) => {
                             res.redirect('/wallets')
                             return;
                         })
-                    } else if ((mapping[assetsFromType.type]) === "Actions") {
+                    } else if ((mapping[assetsFromType.type]) === "Stocks") {
                         res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.body.wallet_id })
                         return;
                     } else {
@@ -221,7 +221,7 @@ exports.infoAsset = (req, res) => {
             api = JSON.parse(req.body.apiInfos)
             res.render('assetInfoView.ejs', { api, asset: JSON.parse(req.body.assetInfos) })
             return;
-        } else if (mapping[JSON.parse(req.body.assetInfos).type] === "Actions") {
+        } else if (mapping[JSON.parse(req.body.assetInfos).type] === "Stocks") {
             toolbox.actionValueCall(JSON.parse(req.body.assetInfos).ticker).then(result => {
                 api = {
                     name: JSON.parse(req.body.assetInfos).label,
@@ -230,7 +230,7 @@ exports.infoAsset = (req, res) => {
                     total_supply: 0,
                     market_cap: 0,
                     price: result.eod[0].close || 0,
-                    type: "Actions"
+                    type: "Stocks"
                 }
                 res.render('assetInfoView.ejs', { api, asset: JSON.parse(req.body.assetInfos) })
                 return;

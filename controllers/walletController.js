@@ -84,7 +84,7 @@ exports.createWallet = (req, res) => {
             ('00' + (date.getUTCMonth() + 1)).slice(-2) + '-' +
             ('00' + date.getUTCDate()).slice(-2)
         let wallet = new Wallet(null, req.body.type, req.body.label, date, [], req.body.user_id);
-        if(wallet.type !== "Actions" && wallet.type !== "Crypto-actifs"){
+        if(wallet.type !== "Stocks" && wallet.type !== "Crypto-assets"){
             req.body.notification = "Ce type n'est pas encore utilisable"
             this.fetchAllWallets(req, res);
             return;

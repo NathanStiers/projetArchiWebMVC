@@ -19,7 +19,7 @@
             <div class="walletCard walletItem">
                 <a class="deleteCard" href="/wallets/<%= user.wallet_list[i].id %>/delete">X</a>
                 <a href="/wallets/<%= user.wallet_list[i].id %>">
-                    <p>Portefeuille <%= i+1 %></p>
+                    <p>Wallet <%= i+1 %></p>
                     <p><%= user.wallet_list[i].label %></p>
                     <p>Type : <%= user.wallet_list[i].type %></p>
                 </a>
@@ -41,7 +41,7 @@
                       </select>
                     </div>
                     <div class="modal__action">
-                      <input class="vfm-btn" type="submit" value="confirm">
+                      <input class="vfm-btn" type="submit" value="Confirm">
                     </div>
                 </form>
             </div>
