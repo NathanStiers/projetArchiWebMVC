@@ -6,14 +6,13 @@ const fetchUserByMail = require('../middlewares/fetchUserByMail')
 const mappingRoles = require('../middlewares/mappingRoles')
 
 let userController = require('../../controllers/userController');
-let assetController = require('../../controllers/assetController');
 
 const userConfigurationMiddleware = [isConnected, mappingRoles]
 
 //Routes View
-router.get('/', (req, res) => res.render('homeView.ejs'))
-router.get('/login', isConnected, (req, res) => res.render('loginView.ejs'))
-router.get('/subscribe', isConnected, (req, res) => res.render('subscribeView.ejs'))
+router.get('/', isConnected, (req, res) => res.render('homeView.ejs', {notification : req.flash().notification}))
+router.get('/login', isConnected, (req, res) => res.render('loginView.ejs', {notification : req.flash().notification}))
+router.get('/subscribe', isConnected, (req, res) => res.render('subscribeView.ejs', {notification : req.flash().notification}))
 
 // Routes Users
 router.post('/user/connect', userConfigurationMiddleware, fetchUserByMail, userController.connectUser);

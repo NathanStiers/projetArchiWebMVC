@@ -1,5 +1,4 @@
 const db = require('../db');
-const toolbox = require('../toolbox')
 
 /**
  * Check if a user has already reached the maximum amount of wallet
@@ -11,7 +10,8 @@ const toolbox = require('../toolbox')
 module.exports = (req, res, callback) => {
     db.db.query("SELECT COUNT(id) AS count FROM wallets WHERE user_id = ?;", req.body.user_id, (error, resultSQLCount) => {
         if (error) {
-            res.status(500).send(error);
+            req.flash('notification', error + ". Please contact the webmaster");
+            callback();
         } else {
             let count = resultSQLCount[0].count;
             let role = req.body.user_role

@@ -11,39 +11,42 @@ exports.fetchWalletAllAssets = (req, res) => {
     toolbox.fetchAssetsBasedOnType(req.params.id_wallet).then(assetsFromType => {
         db.db.query("SELECT DISTINCT a.ticker, a.label, aw.id_wallet, aw.id, aw.quantity, aw.invested_amount, aw.price_alert, w.type FROM assets AS a, wallets AS w, assets_wallets AS aw WHERE aw.id_wallet = ? AND aw.id_asset = a.id AND w.user_id = ? AND w.id = aw.id_wallet;", [req.params.id_wallet, req.body.user_id], (error, resultSQL) => {
             if (error) {
+                req.flash('notification', error + '. Please contact the webmaster');
                 res.redirect('/wallets')
+                return;
             } else {
-                toolbox.mapping_label_id_types().then(mapping => {
-                    if ((mapping[assetsFromType.type]) === "Crypto-assets") {
-                        let newDict = {}
-                        toolbox.cyptoValuesCall().then(cryptoAPI => {
-                            cryptoAPI.forEach(el => {
-                                newDict[el.symbol] = {
-                                    name: el.name,
-                                    ticker: el.symbol,
-                                    max_supply: el.max_supply,
-                                    total_supply: el.total_supply,
-                                    market_cap: el.quote.EUR.market_cap,
-                                    price: el.quote.EUR.price,
-                                    type: "Crypto-assets"
-                                }
-                            })
-                            res.render("assetView.ejs", { resultSQL, apiInfos: newDict, assetsFromType: assetsFromType.assets, id_wallet: req.params.id_wallet })
-                        }).catch(error => {
-                            res.redirect('/wallets')
+                let mapping_types = req.body.mapping_types
+                if ((mapping_types[assetsFromType.type]) === "Crypto-assets") {
+                    let newDict = {}
+                    toolbox.cryptoValuesCall().then(cryptoAPI => {
+                        cryptoAPI.forEach(el => {
+                            newDict[el.symbol] = {
+                                name: el.name,
+                                ticker: el.symbol,
+                                max_supply: el.max_supply,
+                                total_supply: el.total_supply,
+                                market_cap: el.quote.EUR.market_cap,
+                                price: el.quote.EUR.price,
+                                type: "Crypto-assets"
+                            }
                         })
-                    } else if ((mapping[assetsFromType.type]) === "Stocks") {
-                        res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.params.id_wallet })
-                    } else {
-                        res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.params.id_wallet })
-                    }
-                }).catch(error => {
-                    res.redirect('/wallets')
-                })
+                        res.render("assetView.ejs", { resultSQL, apiInfos: newDict, assetsFromType: assetsFromType.assets, id_wallet: req.params.id_wallet, notification: req.flash().notification })
+                    }).catch(error => {
+                        req.flash('notification', error + '. Please contact the webmaster');
+                        res.redirect('/wallets')
+                        return;
+                    })
+                } else if ((mapping_types[assetsFromType.type]) === "Stocks") {
+                    res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.params.id_wallet, notification: "The Stocks API is not linked yet" })
+                } else {
+                    res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.params.id_wallet, notification: "Only Stocks and crypto-assets are working for the moment" })
+                }
             }
         });
-    }).catch(err => {
+    }).catch(error => {
+        req.flash('notification', error + '. Please contact the webmaster');
         res.redirect('/wallets')
+        return;
     })
 }
 
@@ -57,39 +60,41 @@ exports.searchAsset = (req, res) => {
     toolbox.fetchAssetsBasedOnType(req.body.wallet_id).then(assetsFromType => {
         db.db.query("SELECT DISTINCT a.ticker, a.label, aw.id_wallet, aw.id, aw.quantity, aw.invested_amount, aw.price_alert, w.type FROM assets AS a, wallets AS w, assets_wallets AS aw WHERE aw.id_wallet = ? AND aw.id_asset = a.id AND w.user_id = ? AND w.id = aw.id_wallet AND a.label LIKE ?;", [req.body.wallet_id, req.body.user_id, '%' + req.body.searchLike + '%'], (error, resultSQL) => {
             if (error) {
+                req.flash('notification', error + '. Please contact the webmaster');
                 res.redirect('/wallets')
+                return;
             } else {
-                toolbox.mapping_label_id_types().then(mapping => {
-                    if ((mapping[assetsFromType.type]) === "Crypto-assets") {
-                        let newDict = {}
-                        toolbox.cyptoValuesCall().then(cryptoAPI => {
-                            cryptoAPI.forEach(el => {
-                                newDict[el.symbol] = {
-                                    name: el.name,
-                                    ticker: el.symbol,
-                                    max_supply: el.max_supply,
-                                    total_supply: el.total_supply,
-                                    market_cap: el.quote.EUR.market_cap,
-                                    price: el.quote.EUR.price,
-                                    type: "Crypto-assets"
-                                }
-                            })
-                            res.render("assetView.ejs", { resultSQL, apiInfos: newDict, assetsFromType: assetsFromType.assets, id_wallet: req.body.wallet_id })
-                        }).catch(error => {
-                            res.redirect('/wallets')
+                let mapping_types = req.body.mapping_types
+                if ((mapping_types[assetsFromType.type]) === "Crypto-assets") {
+                    let newDict = {}
+                    toolbox.cryptoValuesCall().then(cryptoAPI => {
+                        cryptoAPI.forEach(el => {
+                            newDict[el.symbol] = {
+                                name: el.name,
+                                ticker: el.symbol,
+                                max_supply: el.max_supply,
+                                total_supply: el.total_supply,
+                                market_cap: el.quote.EUR.market_cap,
+                                price: el.quote.EUR.price,
+                                type: "Crypto-assets"
+                            }
                         })
-                    } else if ((mapping[assetsFromType.type]) === "Stocks") {
-                        res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.body.wallet_id })
-                    } else {
-                        res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.body.wallet_id })
-                    }
-                }).catch(error => {
-                    res.redirect('/wallets')
-                })
+                        res.render("assetView.ejs", { resultSQL, apiInfos: newDict, assetsFromType: assetsFromType.assets, id_wallet: req.body.wallet_id })
+                    }).catch(error => {
+                        req.flash('notification', error + '. Please contact the webmaster');
+                        res.redirect('/wallets')
+                        return;                    })
+                } else if ((mapping_types[assetsFromType.type]) === "Stocks") {
+                    res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.body.wallet_id })
+                } else {
+                    res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.body.wallet_id })
+                }
             }
         });
-    }).catch(err => {
+    }).catch(error => {
+        req.flash('notification', error + '. Please contact the webmaster');
         res.redirect('/wallets')
+        return;    
     })
 }
 
@@ -101,14 +106,19 @@ exports.searchAsset = (req, res) => {
  */
 exports.addAsset = (req, res) => {
     if (req.body.wallet_type !== req.body.asset_type) {
+        req.flash('notification', 'Le type de l\'actif ne correspond pas à celui du portefeuille');
         res.redirect('/wallets/' + req.body.wallet_id)
         return;
     }
     db.db.query("INSERT INTO assets_wallets (id_wallet, id_asset, quantity, invested_amount) VALUES(?,?,?,?);", [req.body.wallet_id, req.body.asset_id, req.body.quantity, req.body.invested_amount], (error, resultSQL) => {
         if (error) {
+            req.flash('notification', error + '. Please contact the webmaster');
             res.redirect('/wallets/' + req.body.wallet_id)
+            return;
         } else {
+            req.flash('notification', 'Ajout effectué');
             res.redirect('/wallets/' + req.body.wallet_id)
+            return;        
         }
     });
 }
@@ -122,9 +132,13 @@ exports.addAsset = (req, res) => {
 exports.removeAsset = (req, res) => {
     db.db.query("DELETE FROM assets_wallets WHERE id = ?;", [JSON.parse(req.body.assetInfos).id], (error, resultSQL) => {
         if (error) {
+            req.flash('notification', error + '. Please contact the webmaster');
             res.redirect('/wallets/' + req.body.wallet_id)
+            return;
         } else {
+            req.flash('notification', 'Suppression effectué');
             res.redirect('/wallets/' + req.body.wallet_id)
+            return;        
         }
     });
 }
@@ -167,25 +181,23 @@ exports.setPriceAlert = (req, res) => {
         res.status(403).send("Le montant est incorrect")
         return;
     }
-    toolbox.mapping_label_id_roles().then(mapping => {
-        db.db.query("SELECT * FROM users WHERE id = ? AND role = ?;", [req.body.user_id, mapping["premium"]], (error, resultSQL) => {
-            if (error) {
-                res.status(500).send(error)
-            } else if (resultSQL.length) {
-                res.status(403).send("Il s'agit d'une fonctionnalité premium")
-            } else {
-                db.db.query("UPDATE assets_wallets SET price_alert = ? WHERE id_wallet = ? AND id_asset = ?;", [req.body.price_alert, req.body.wallet_id, req.body.asset_id], (error, resultSQL) => {
-                    if (error) {
-                        res.status(500).send(error)
-                    } else {
-                        res.status(200).send("Mise à jour effectuée")
-                    }
-                });
-            }
-        });
-    }).catch(err => {
-        res.status(500).send(err);
-    })
+    let mapping_roles = req.body.mapping_roles
+    db.db.query("SELECT * FROM users WHERE id = ? AND role = ?;", [req.body.user_id, mapping_roles["premium"]], (error, resultSQL) => {
+        if (error) {
+            res.status(500).send(error)
+        } else if (resultSQL.length) {
+            res.status(403).send("Il s'agit d'une fonctionnalité premium")
+        } else {
+            db.db.query("UPDATE assets_wallets SET price_alert = ? WHERE id_wallet = ? AND id_asset = ?;", [req.body.price_alert, req.body.wallet_id, req.body.asset_id], (error, resultSQL) => {
+                if (error) {
+                    res.status(500).send(error)
+                } else {
+                    res.status(200).send("Mise à jour effectuée")
+                }
+            });
+        }
+    });
+
 }
 
 /**
@@ -222,27 +234,26 @@ exports.changeInitialInvestment = (req, res) => {
  */
 exports.infoAsset = (req, res) => {
     let api = undefined
-    toolbox.mapping_label_id_types().then(mapping => {
-        if (req.body.apiInfos != undefined) {
-            api = JSON.parse(req.body.apiInfos)
+    let mapping_types = req.body.mapping_types
+    if (req.body.apiInfos != undefined) {
+        api = JSON.parse(req.body.apiInfos)
+        res.render('assetInfoView.ejs', { api, asset: JSON.parse(req.body.assetInfos) })
+    } else if (mapping_types[JSON.parse(req.body.assetInfos).type] === "Stocks") {
+        toolbox.stockValuesCall(JSON.parse(req.body.assetInfos).ticker).then(result => {
+            api = {
+                name: JSON.parse(req.body.assetInfos).label,
+                ticker: JSON.parse(req.body.assetInfos).ticker,
+                max_supply: 0,
+                total_supply: 0,
+                market_cap: 0,
+                price: result.eod[0].close || 0,
+                type: "Stocks"
+            }
             res.render('assetInfoView.ejs', { api, asset: JSON.parse(req.body.assetInfos) })
-        } else if (mapping[JSON.parse(req.body.assetInfos).type] === "Stocks") {
-            toolbox.actionValueCall(JSON.parse(req.body.assetInfos).ticker).then(result => {
-                api = {
-                    name: JSON.parse(req.body.assetInfos).label,
-                    ticker: JSON.parse(req.body.assetInfos).ticker,
-                    max_supply: 0,
-                    total_supply: 0,
-                    market_cap: 0,
-                    price: result.eod[0].close || 0,
-                    type: "Stocks"
-                }
-                res.render('assetInfoView.ejs', { api, asset: JSON.parse(req.body.assetInfos) })
-            }).catch(error => {
-                res.redirect('/wallets/' + JSON.parse(req.body.assetInfos).id_wallet)
-            })
-        }
-    }).catch(error => {
-        res.redirect('/wallets/' + JSON.parse(req.body.assetInfos).id_wallet)
-    })
+        }).catch(error => {
+            req.flash('notification', error + '. Please contact the webmaster');
+            res.redirect('/wallets/' + JSON.parse(req.body.assetInfos).id_wallet)
+            return;
+        })
+    }
 }

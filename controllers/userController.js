@@ -15,32 +15,40 @@ const saltRounds = 12;
  * @param {Object} res The response Object
  */
 exports.createUser = (req, res) => {
-    if (req.body.notification) {
-        res.render('SubscribeView.ejs', { notification: req.body.notification })
+    if (req.body.password !== req.body.passwordConfirm) {
+        req.flash('notification', 'Les mots de passe ne correspondent pas');
+        res.redirect('/subscribe')
         return;
     }
-    if (req.body.password !== req.body.passwordConfirm) {
-        res.render('SubscribeView.ejs', { notification: "Les mots de passe ne correspondent pas" })
+    if(req.body.name === "" || req.body.surname === "" || req.body.mail === "" || req.body.password === ""){
+        req.flash('notification', 'Veuillez remplir tous les champs du formulaire');
+        res.redirect('/subscribe')
         return;
     }
     let user = new User(null, 1, req.body.name, req.body.surname, req.body.mail, null, []);
-    bcrypt.hash(req.body.password, saltRounds, (err, hash) => {
-        if (err) {
-            res.render('SubscribeView.ejs', { notification: err + ". Please contact the webmaster" })
+    bcrypt.hash(req.body.password, saltRounds, (error, hash) => {
+        if (error) {
+            req.flash('notification', error + '. Please contact the webmaster');
+            res.redirect('/subscribe')
             return;
         }
         user.password = hash;
         if (!toolbox.checkMail(user.mail)) { //Check all info user
-            res.render('SubscribeView.ejs', { notification: "Le mail ne correspond pas au bon format" })
+            req.flash('notification', 'Le mail ne correspond pas au bon format');
+            res.redirect('/subscribe')
             return;
         }
         let mapping_roles = req.body.mapping_roles
         db.db.query("INSERT INTO users (role, name, surname, mail, password) VALUES (?, ?, ?, ?, ?);", [mapping_roles['basic'], user.name, user.surname, user.mail, user.password], (error, resultSQL) => {
             if (error) {
                 if (error.errno === 1062) {
-                    res.render('SubscribeView.ejs', { notification: "Ce mail est déjà utilisé" })
+                    req.flash('notification', 'Ce mail est déjà utilisé');
+                    res.redirect('/subscribe')
+                    return;
                 } else {
-                    res.render('SubscribeView.ejs', { notification: error + ". Please contact the webmaster" })
+                    req.flash('notification', error + '. Please contact the webmaster');
+                    res.redirect('/subscribe')
+                    return;
                 }
             } else {
                 user.id = resultSQL.insertId;
@@ -63,13 +71,11 @@ exports.createUser = (req, res) => {
  * @param {Object} res The response Object
  */
 exports.connectUser = (req, res) => {
-    if (req.body.notification) {
-        res.render('LoginView.ejs', { notification: req.body.notification })
-        return;
-    }
     bcrypt.compare(req.body.password, req.body.user.password, function (error, result) {
         if (error) {
-            res.render('LoginView.ejs', { notification: error + ". Please contact the webmaster" })
+            req.flash('notification', error + '. Please contact the webmaster');
+            res.redirect('/login')
+            return;
         } else if (result) {
             delete req.body.user.password
             const token = jwt.sign({ user_id: req.body.user.id, user_role: req.body.user.role }, process.env.ACCESS_TOKEN_SECRET);
@@ -78,7 +84,9 @@ exports.connectUser = (req, res) => {
             res.cookie('Token', token, { maxAge: expires });
             res.redirect('/wallets')
         } else {
-            res.render('LoginView.ejs', { notification: "Authentification incorrecte" })
+            req.flash('notification', 'Authentification incorrecte');
+            res.redirect('/login')
+            return;
         }
     });
 }
@@ -92,18 +100,23 @@ exports.connectUser = (req, res) => {
 exports.upgradeUser = (req, res) => {
     let mapping_roles = req.body.mapping_roles
     if (req.body.user_role === "premium") {
-        res.render('premiumView.ejs', { notification: "Vous êtes déjà premium" })
+        req.flash('notification', 'Vous êtes déjà premium');
+        res.redirect('/premium')
         return;
     }
     db.db.query("UPDATE users SET role = ? WHERE id = ?;", [mapping_roles["premium"], req.body.user_id], (error, resultSQL) => {
         if (error) {
-            res.render('premiumView.ejs', { notification: error + ". Please contact the webmaster" })
+            req.flash('notification', error + '. Please contact the webmaster');
+            res.redirect('/premium')
+            return;
         } else {
             const token = jwt.sign({ user_id: req.body.user_id, user_role: "premium" }, process.env.ACCESS_TOKEN_SECRET);
             let d = new Date();
             let expires = d.setTime(d.getTime() + 6 * 60 * 60 * 1000);
             res.cookie('Token', token, { maxAge: expires });
-            res.render('premiumView.ejs', { notification: "Vous êtes maintenant premium" })
+            req.flash('notification', 'Vous êtes maintenant premium');
+            res.redirect('/premium')
+            return;
         }
     })
 }
@@ -115,10 +128,6 @@ exports.upgradeUser = (req, res) => {
  * @param {Object} res The response Object
  */
 exports.forgotPwdUser = (req, res) => {
-    if (req.body.notification) {
-        res.render('LoginView.ejs', { notification: req.body.notification })
-        return;
-    }
     let mail = req.body.user.mail
     let id = req.body.user.id
     let newPassword = generator.generate({
@@ -127,17 +136,24 @@ exports.forgotPwdUser = (req, res) => {
     });
     bcrypt.hash(newPassword, saltRounds, (error, hash) => {
         if (error) {
-            res.render('LoginView.ejs', { notification: error + ". Please contact the webmaster" })
+            req.flash('notification', error + '. Please contact the webmaster');
+            res.redirect('/login')
             return;
         }
         db.db.query("UPDATE users SET password = ? WHERE id = ?;", [hash, id], (error, resultSQL) => {
             if (error) {
-                res.render('LoginView.ejs', { notification: error + ". Please contact the webmaster" })
+                req.flash('notification', error + '. Please contact the webmaster');
+                res.redirect('/login')
+                return;
             } else {
                 toolbox.sendMail(mail, "Confidential : Your new password", newPassword).then(result => {
-                    res.render('LoginView.ejs', { notification: "Email envoyé à : " + mail })
+                    req.flash('notification', "Email envoyé à : " + mail);
+                    res.redirect('/login')
+                    return;
                 }).catch(error => {
-                    res.render('LoginView.ejs', { notification: error + ". Please contact the webmaster" })
+                    req.flash('notification', error + '. Please contact the webmaster');
+                    res.redirect('/login')
+                    return;
                 });
             }
         });
@@ -156,44 +172,40 @@ exports.statisticsResults = (req, res) => {
             res.render('statisticsView.ejs', { notification: error + ". Please contact the webmaster" })
         } else {
             let newDict = {}
-            toolbox.mapping_label_id_types().then(mapping => {
-                toolbox.cyptoValuesCall().then(cryptoAPI => {
-                    cryptoAPI.forEach(el => {
-                        newDict[el.symbol] = {
-                            name: el.name,
-                            ticker: el.symbol,
-                            price: el.quote.EUR.price
-                        }
-                    })
-                    let howMuchType = {
-                        "Crypto-assets": resultSQL.filter(el => mapping[el.type] === "Crypto-assets").length,
-                        "Stocks": resultSQL.filter(el => mapping[el.type] === "Stocks").length,
-                        "TODO": resultSQL.filter(el => mapping[el.type] === "TODO").length
+            let mapping_types = req.body.mapping_types
+            toolbox.cryptoValuesCall().then(cryptoAPI => {
+                cryptoAPI.forEach(el => {
+                    newDict[el.symbol] = {
+                        name: el.name,
+                        ticker: el.symbol,
+                        price: el.quote.EUR.price
                     }
-                    let totalProfit = 0
-                    let pruComparison = {
-                        "best": ['error', Number.MAX_VALUE],
-                        "worst": ['error', Number.MIN_VALUE]
-                    }
-                    let valueComparison = {
-                        "best": ['error', Number.MIN_VALUE],
-                        "worst": ['error', Number.MAX_VALUE]
-                    }
-                    resultSQL.forEach(el => {
-                        if (mapping[el.type] === "Crypto-assets") {
-                            totalProfit += (el.quantity * newDict[el.ticker].price) - (el.invested_amount)
-                            pruComparison.worst = (pruComparison.worst[1] < (el.invested_amount / el.quantity)) ? [el.ticker, (el.invested_amount / el.quantity)] : pruComparison.worst
-                            pruComparison.best = (pruComparison.best[1] > (el.invested_amount / el.quantity)) ? [el.ticker, (el.invested_amount / el.quantity)] : pruComparison.best
-                            valueComparison.best = (valueComparison.best[1] < (newDict[el.ticker].price * el.quantity)) ? [el.ticker, (newDict[el.ticker].price * el.quantity)] : valueComparison.best
-                            valueComparison.worst = (valueComparison.worst[1] > (newDict[el.ticker].price * el.quantity)) ? [el.ticker, (newDict[el.ticker].price * el.quantity)] : valueComparison.worst
-                        }
-                    })
-                    let countUniqueAssets = new Set(resultSQL.map(({ ticker }) => ticker)).size
-                    console.log(howMuchType); console.log(countUniqueAssets); console.log(totalProfit); console.log(pruComparison); console.log(valueComparison);
-                    res.render('statisticsView.ejs', { howMuchType, countUniqueAssets, totalProfit, pruComparison, valueComparison })
-                }).catch(error => {
-                    res.render('statisticsView.ejs', { notification: error + ". Please contact the webmaster" })
                 })
+                let howMuchType = {
+                    "Crypto-assets": resultSQL.filter(el => mapping_types[el.type] === "Crypto-assets").length,
+                    "Stocks": resultSQL.filter(el => mapping_types[el.type] === "Stocks").length,
+                    "TODO": resultSQL.filter(el => mapping_types[el.type] === "TODO").length
+                }
+                let totalProfit = 0
+                let pruComparison = {
+                    "best": ['error', Number.MAX_VALUE],
+                    "worst": ['error', Number.MIN_VALUE]
+                }
+                let valueComparison = {
+                    "best": ['error', Number.MIN_VALUE],
+                    "worst": ['error', Number.MAX_VALUE]
+                }
+                resultSQL.forEach(el => {
+                    if (mapping_types[el.type] === "Crypto-assets") {
+                        totalProfit += (el.quantity * newDict[el.ticker].price) - (el.invested_amount)
+                        pruComparison.worst = (pruComparison.worst[1] < (el.invested_amount / el.quantity)) ? [el.ticker, (el.invested_amount / el.quantity)] : pruComparison.worst
+                        pruComparison.best = (pruComparison.best[1] > (el.invested_amount / el.quantity)) ? [el.ticker, (el.invested_amount / el.quantity)] : pruComparison.best
+                        valueComparison.best = (valueComparison.best[1] < (newDict[el.ticker].price * el.quantity)) ? [el.ticker, (newDict[el.ticker].price * el.quantity)] : valueComparison.best
+                        valueComparison.worst = (valueComparison.worst[1] > (newDict[el.ticker].price * el.quantity)) ? [el.ticker, (newDict[el.ticker].price * el.quantity)] : valueComparison.worst
+                    }
+                })
+                let countUniqueAssets = new Set(resultSQL.map(({ ticker }) => ticker)).size
+                res.render('statisticsView.ejs', { howMuchType, countUniqueAssets, totalProfit, pruComparison, valueComparison })
             }).catch(error => {
                 res.render('statisticsView.ejs', { notification: error + ". Please contact the webmaster" })
             })

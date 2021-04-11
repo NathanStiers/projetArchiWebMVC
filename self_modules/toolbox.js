@@ -47,28 +47,6 @@ exports.sendMail = (to, subject, text) => {
 }
 
 /**
- * Allows to map types between label and id
- * 
- * @returns {Promise} Make the mapping and return a promise
- */
-exports.mapping_label_id_types = () => {
-    return new Promise((resolve, reject) => {
-        db.db.query("SELECT * FROM types;", (error, resultSQL) => {
-            if (error) {
-                reject(error)
-            } else {
-                let mapping = {}
-                resultSQL.forEach(t => {
-                    mapping[t.id] = t.label;
-                    mapping[t.label] = t.id;
-                });
-                resolve(mapping)
-            }
-        });
-    });
-}
-
-/**
  * Allows to map roles between label and id
  * 
  * @returns {Promise} Make the mapping and return a promise
@@ -99,7 +77,7 @@ exports.fetchAllTypes = () => {
     return new Promise((resolve, reject) => {
         db.db.query("SELECT * FROM types;", (error, resultSQL) => {
             if (error) {
-                reject(500)
+                reject(error)
             } else {
                 let ret = []
                 resultSQL.forEach(r => {
@@ -121,11 +99,11 @@ exports.fetchAssetsBasedOnType = (id) => {
     return new Promise((resolve, reject) => {
         db.db.query("SELECT type FROM wallets WHERE id = ?;", id, (error, resultSQL) => {
             if (error) {
-                reject(500)
+                reject(error)
             } else {
                 db.db.query("SELECT * FROM assets WHERE type = ?;", resultSQL[0].type, (error, resultSQL) => {
                     if (error) {
-                        reject(500)
+                        reject(error)
                     } else {
                         let assets = []
                         resultSQL.forEach(r => {
@@ -144,7 +122,7 @@ exports.fetchAssetsBasedOnType = (id) => {
  * 
  * @returns {Promise} Fetch the data from the external API and return a promise
  */
-exports.cyptoValuesCall = () => {
+exports.cryptoValuesCall = () => {
     return new Promise((resolve, reject) => {
         axios.get("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest", {
             params: {
@@ -167,7 +145,7 @@ exports.cyptoValuesCall = () => {
  * @param {string} ticker The ticker of the stock
  * @returns {Promise} Fetch the data from the external API and return a promise
  */
-exports.actionValueCall = (ticker) => {
+exports.stockValuesCall = (ticker) => {
     return new Promise((resolve, reject) => {
         axios.get("http://api.marketstack.com/v1/tickers/"+ticker+"/eod", {
             params: {
@@ -179,57 +157,4 @@ exports.actionValueCall = (ticker) => {
             reject(error)
         });
     });
-}
-
-/**
- * Allows you to retrieve information from a cookie
- * 
- * @param {string} cname The name of the cookie
- * @returns {string} The data of the cookie or undefined if it doesn't exists
- */
-exports.readCookie = (cname) => {
-    var name = cname + "=";
-    var decodedCookie = decodeURIComponent(document.cookie);
-    var ca = decodedCookie.split(';');
-    for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length)
-        }
-    }
-    return undefined;
-}
-
-/**
- * Checks if the user is logged in 
- * 
- * @returns {boolean} True if the user is connected, false otherwise
- */
-exports.checkIfConnected = () => {
-    return this.readCookie("Token") !== undefined
-}
-
-/**
- * Transforms data from external APIs to standardize the structure
- * 
- * @param {Object} dictToTransform The JSON response from external API
- * @returns {Object} The modified JSON Object
- */
-exports.transformDictFromCryptoAPI = (dictToTransform) => {
-    let newDict = {}
-    dictToTransform.forEach(el => {
-        newDict[el.symbol] = {
-            name: el.name,
-            ticker: el.symbol,
-            max_supply: el.max_supply,
-            total_supply: el.total_supply,
-            market_cap: el.quote.EUR.market_cap,
-            price: el.quote.EUR.price,
-            type: "Crypto-assets"
-        }
-    })
-    return newDict;
 }
