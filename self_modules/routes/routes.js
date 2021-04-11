@@ -11,7 +11,7 @@ let assetController = require('../../controllers/assetController');
 const userConfigurationMiddleware = [isConnected, mappingRoles]
 
 //Routes View
-router.get('/', isConnected, (req, res) => res.render('homeView.ejs'))
+router.get('/', (req, res) => res.render('homeView.ejs'))
 router.get('/login', isConnected, (req, res) => res.render('loginView.ejs'))
 router.get('/subscribe', isConnected, (req, res) => res.render('subscribeView.ejs'))
 
@@ -19,9 +19,5 @@ router.get('/subscribe', isConnected, (req, res) => res.render('subscribeView.ej
 router.post('/user/connect', userConfigurationMiddleware, fetchUserByMail, userController.connectUser);
 router.post('/user/create', userConfigurationMiddleware, userController.createUser);
 router.post('/user/forgotPwd', userConfigurationMiddleware, fetchUserByMail, userController.forgotPwdUser);
-
-// Routes Assets
-router.get('/assets/fetchAll', assetController.fetchAllAssets);
-
 
 module.exports = router;

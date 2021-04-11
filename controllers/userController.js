@@ -8,9 +8,12 @@ const jwt = require('jsonwebtoken');
 
 const saltRounds = 12;
 
-// Permet de créer un nouvel utilisateur s'il n'existe pas déjà
-// Method : POST 
-// Body : name, surname, mail, password
+/**
+ * Allows you to create a new user if it does not already exist
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ */
 exports.createUser = (req, res) => {
     if (req.body.notification) {
         res.render('SubscribeView.ejs', { notification: req.body.notification })
@@ -53,9 +56,12 @@ exports.createUser = (req, res) => {
     })
 }
 
-// Permet d'authentifier un utilisateur sur base de son mail et de son mot de passe
-// Method : POST 
-// Body : mail, password
+/**
+ * Allows to authenticate a user based on his email and password
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ */
 exports.connectUser = (req, res) => {
     if (req.body.notification) {
         res.render('LoginView.ejs', { notification: req.body.notification })
@@ -77,9 +83,12 @@ exports.connectUser = (req, res) => {
     });
 }
 
-// Permet de modifier le rôle d'un utilisateur classique vers utilisateur premium sur base de son id
-// Method : GET
-// Body : id (from JWT)
+/**
+ * Allows you to change the role of a classic user to a premium user based on his id
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ */
 exports.upgradeUser = (req, res) => {
     let mapping_roles = req.body.mapping_roles
     if (req.body.user_role === "premium") {
@@ -99,9 +108,12 @@ exports.upgradeUser = (req, res) => {
     })
 }
 
-// Permet à un utilisateur étourdi de récupérer son mot de passe sur base de son email
-// Method : POST
-// Body : email
+/**
+ * Allows a dizzy user to recover his password based on his email
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ */
 exports.forgotPwdUser = (req, res) => {
     if (req.body.notification) {
         res.render('LoginView.ejs', { notification: req.body.notification })
@@ -132,6 +144,12 @@ exports.forgotPwdUser = (req, res) => {
     })
 }
 
+/**
+ * Allows a user to analyze their investments through wallet statistics
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ */
 exports.statisticsResults = (req, res) => {
     db.db.query("SELECT DISTINCT a.ticker, a.label, aw.id_wallet, aw.id, aw.quantity, aw.invested_amount, aw.price_alert, w.type FROM assets AS a, wallets AS w, assets_wallets AS aw WHERE aw.id_asset = a.id AND w.user_id = ? AND w.id = aw.id_wallet AND w.id IN (SELECT * FROM(SELECT win.id FROM wallets AS win WHERE win.user_id = ? ORDER BY win.creation_date ASC, win.id ASC LIMIT ?) temp_tab);", [req.body.user_id, req.body.user_id, req.body.user_role === "premium" ? 10 : 3], (error, resultSQL) => {
         if (error) {
@@ -183,6 +201,12 @@ exports.statisticsResults = (req, res) => {
     })
 }
 
+/**
+ * Allows a user to logout
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ */
 exports.logOutUser = (req, res) => {
     res.cookie('Token', null, { maxAge: 0 }); 
     res.redirect('/')

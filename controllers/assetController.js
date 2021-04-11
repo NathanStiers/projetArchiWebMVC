@@ -1,6 +1,12 @@
 const db = require('../self_modules/db');
 const toolbox = require("../self_modules/toolbox");
 
+/**
+ * Allows you to retrieve all the assets in a wallet
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ */
 exports.fetchWalletAllAssets = (req, res) => {
     toolbox.fetchAssetsBasedOnType(req.params.id_wallet).then(assetsFromType => {
         db.db.query("SELECT DISTINCT a.ticker, a.label, aw.id_wallet, aw.id, aw.quantity, aw.invested_amount, aw.price_alert, w.type FROM assets AS a, wallets AS w, assets_wallets AS aw WHERE aw.id_wallet = ? AND aw.id_asset = a.id AND w.user_id = ? AND w.id = aw.id_wallet;", [req.params.id_wallet, req.body.user_id], (error, resultSQL) => {
@@ -41,6 +47,12 @@ exports.fetchWalletAllAssets = (req, res) => {
     })
 }
 
+/**
+ * Allows you to search for an asset based on its label
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ */
 exports.searchAsset = (req, res) => {
     toolbox.fetchAssetsBasedOnType(req.body.wallet_id).then(assetsFromType => {
         db.db.query("SELECT DISTINCT a.ticker, a.label, aw.id_wallet, aw.id, aw.quantity, aw.invested_amount, aw.price_alert, w.type FROM assets AS a, wallets AS w, assets_wallets AS aw WHERE aw.id_wallet = ? AND aw.id_asset = a.id AND w.user_id = ? AND w.id = aw.id_wallet AND a.label LIKE ?;", [req.body.wallet_id, req.body.user_id, '%' + req.body.searchLike + '%'], (error, resultSQL) => {
@@ -81,6 +93,12 @@ exports.searchAsset = (req, res) => {
     })
 }
 
+/**
+ * Adds an asset to one user's wallet
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ */
 exports.addAsset = (req, res) => {
     if (req.body.wallet_type !== req.body.asset_type) {
         res.redirect('/wallets/' + req.body.wallet_id)
@@ -95,6 +113,12 @@ exports.addAsset = (req, res) => {
     });
 }
 
+/**
+ * Remove an asset to one user's wallet
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ */
 exports.removeAsset = (req, res) => {
     db.db.query("DELETE FROM assets_wallets WHERE id = ?;", [JSON.parse(req.body.assetInfos).id], (error, resultSQL) => {
         if (error) {
@@ -105,6 +129,12 @@ exports.removeAsset = (req, res) => {
     });
 }
 
+/**
+ * Allows you to change the quantity owned of an asset
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ */
 exports.changeQtyAsset = (req, res) => {
     let assetParsed = JSON.parse(req.body.assetInfos)
     let api = undefined
@@ -125,6 +155,13 @@ exports.changeQtyAsset = (req, res) => {
     });
 }
 
+/**
+ * Allows you to set the alert price of an asset if the user is premium
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ * @todo this UserStory is not implemented on the website
+ */
 exports.setPriceAlert = (req, res) => {
     if (req.body.price_alert <= 0) {
         res.status(403).send("Le montant est incorrect")
@@ -151,6 +188,12 @@ exports.setPriceAlert = (req, res) => {
     })
 }
 
+/**
+ * Allows you to change the invested amount of an asset
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ */
 exports.changeInitialInvestment = (req, res) => {
     let assetParsed = JSON.parse(req.body.assetInfos)
     let api = undefined
@@ -171,6 +214,12 @@ exports.changeInitialInvestment = (req, res) => {
     })
 }
 
+/**
+ * Fetch more data of an asset
+ * 
+ * @param {Object} req The request Object
+ * @param {Object} res The response Object
+ */
 exports.infoAsset = (req, res) => {
     let api = undefined
     toolbox.mapping_label_id_types().then(mapping => {
