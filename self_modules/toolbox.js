@@ -39,11 +39,8 @@ exports.sendMail = (to, subject, text) => {
         transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
                 reject(error);
-                return;
-            }
-            else {
+            } else {
                 resolve(info);
-                return;
             }
         });
     });
@@ -59,16 +56,13 @@ exports.mapping_label_id_types = () => {
         db.db.query("SELECT * FROM types;", (error, resultSQL) => {
             if (error) {
                 reject(error)
-                return;
-            }
-            else {
+            } else {
                 let mapping = {}
                 resultSQL.forEach(t => {
                     mapping[t.id] = t.label;
                     mapping[t.label] = t.id;
                 });
                 resolve(mapping)
-                return;
             }
         });
     });
@@ -84,16 +78,13 @@ exports.mapping_label_id_roles = () => {
         db.db.query("SELECT * FROM roles;", (error, resultSQL) => {
             if (error) {
                 reject(error)
-                return;
-            }
-            else {
+            } else {
                 let mapping = {}
                 resultSQL.forEach(r => {
                     mapping[r.id] = r.label;
                     mapping[r.label] = r.id;
                 });
                 resolve(mapping)
-                return;
             }
         });
     });
@@ -109,15 +100,12 @@ exports.fetchAllTypes = () => {
         db.db.query("SELECT * FROM types;", (error, resultSQL) => {
             if (error) {
                 reject(500)
-                return;
-            }
-            else {
+            } else {
                 let ret = []
                 resultSQL.forEach(r => {
                     ret.push(r.label);
                 });
                 resolve(ret)
-                return;
             }
         });
     });
@@ -134,21 +122,16 @@ exports.fetchAssetsBasedOnType = (id) => {
         db.db.query("SELECT type FROM wallets WHERE id = ?;", id, (error, resultSQL) => {
             if (error) {
                 reject(500)
-                return;
-            }
-            else {
+            } else {
                 db.db.query("SELECT * FROM assets WHERE type = ?;", resultSQL[0].type, (error, resultSQL) => {
                     if (error) {
                         reject(500)
-                        return;
-                    }
-                    else {
+                    } else {
                         let assets = []
                         resultSQL.forEach(r => {
                             assets.push(r);
                         });
                         resolve({assets, type : resultSQL[0].type})
-                        return;
                     }
                 });
             }
@@ -163,23 +146,18 @@ exports.fetchAssetsBasedOnType = (id) => {
  */
 exports.cyptoValuesCall = () => {
     return new Promise((resolve, reject) => {
-        axios
-            .get("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest", {
-                params: {
-                    'start': '1',
-                    'limit': process.env.COIN_MARKET_CAP_API_LIMIT,
-                    'convert': process.env.COIN_MARKET_CAP_API_CONVERT
-                },
-                headers: { 'X-CMC_PRO_API_KEY': process.env.COIN_MARKET_CAP_API_TOKEN }
-            })
-            .then((response) => {
-                resolve(response.data.data)
-                return;
-            })
-            .catch((error) => {
-                reject(error)
-                return;
-            });
+        axios.get("https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest", {
+            params: {
+                'start': '1',
+                'limit': process.env.COIN_MARKET_CAP_API_LIMIT,
+                'convert': process.env.COIN_MARKET_CAP_API_CONVERT
+            },
+            headers: { 'X-CMC_PRO_API_KEY': process.env.COIN_MARKET_CAP_API_TOKEN }
+        }).then((response) => {
+            resolve(response.data.data)
+        }).catch((error) => {
+            reject(error)
+        });
     });
 }
 
@@ -191,20 +169,15 @@ exports.cyptoValuesCall = () => {
  */
 exports.actionValueCall = (ticker) => {
     return new Promise((resolve, reject) => {
-        axios
-            .get("http://api.marketstack.com/v1/tickers/"+ticker+"/eod", {
-                params: {
-                    'access_key': process.env.MARKET_STACK_API_TOKEN
-                }
-            })
-            .then((response) => {
-                resolve(response.data.data)
-                return;
-            })
-            .catch((error) => {
-                reject(error)
-                return;
-            });
+        axios.get("http://api.marketstack.com/v1/tickers/"+ticker+"/eod", {
+            params: {
+                'access_key': process.env.MARKET_STACK_API_TOKEN
+            }
+        }).then((response) => {
+            resolve(response.data.data)
+        }).catch((error) => {
+            reject(error)
+        });
     });
 }
 
@@ -236,11 +209,7 @@ exports.readCookie = (cname) => {
  * @returns {boolean} True if the user is connected, false otherwise
  */
 exports.checkIfConnected = () => {
-    let token = this.readCookie("Token")
-    if (token !== undefined) {
-        return true;
-    }
-    return false;
+    return this.readCookie("Token") !== undefined
 }
 
 /**

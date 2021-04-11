@@ -11,13 +11,13 @@ const mappingRoles = require('../middlewares/mappingRoles')
 
 // Routes Views
 router.get('/wallets', maxWalletReached, walletController.fetchAllWallets);
-router.post('/wallets', maxWalletReached, walletController.fetchAllWallets);
 router.get('/premium', (req, res) => res.render('premiumView.ejs'));
 router.get('/statistics', userController.statisticsResults);
 router.get('/wallets/:id_wallet/', assetController.fetchWalletAllAssets);
 router.get('/wallets/:id_wallet/delete', walletController.deleteWallet);
-router.post('/assets/info', assetController.infoAsset); 
 router.get('/logout', userController.logOutUser);
+router.post('/assets/info', assetController.infoAsset); 
+router.post('/wallets', maxWalletReached, walletController.fetchAllWallets);
 
 // Routes Users
 router.post('/user/premium', mappingRoles, userController.upgradeUser);

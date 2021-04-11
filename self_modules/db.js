@@ -23,7 +23,7 @@ let connect = ()=>{
             if(err){
                 console.info("[Db] Unable to connect to server: " + err);
                 reject(err)
-            }else{
+            } else {
                 console.info("[Db] Connected successfully to server")
                 exports.db = dbClient
                 resolve(exports.db)

@@ -17,14 +17,12 @@ exports.fetchAllWallets = (req, res) => {
         db.db.query("SELECT * FROM wallets WHERE user_id = ? ORDER BY creation_date ASC, id ASC LIMIT ?;", [user.id, user.role === "premium" ? 10 : 3], (error, resultSQL) => {
             if (error) {
                 res.render('walletView.ejs', { user : null, max_reached: true, types : null, notification : error + ". Please contact the webmaster" })
-                return;
             } else {
                 toolbox.fetchAllTypes().then(result => {
                     resultSQL.forEach(w => {
                         user.wallet_list.push(new Wallet(w.id, mapping_label_id_types[w.type], w.label, w.creation_date, [], user.id))
                     });
                     res.render('walletView.ejs', { user, max_reached: req.body.max_reached, types: result, notification : req.body.notification })
-                    return;
                 }).catch(error => {
                     res.render('walletView.ejs', { user : null, max_reached: true, types : null, notification : error + ". Please contact the webmaster" })
                 });
@@ -32,7 +30,6 @@ exports.fetchAllWallets = (req, res) => {
         });
     }).catch(error => {
         res.render('walletView.ejs', { user : null, max_reached: true, types : null, notification : error + ". Please contact the webmaster" })
-        return;
     });
 }
 
@@ -43,7 +40,6 @@ exports.searchWallet = (req, res) => {
         db.db.query("SELECT * FROM wallets WHERE user_id = ? AND label LIKE ? ORDER BY creation_date ASC, id ASC LIMIT ?;", [user.id, '%' + req.body.searchLike + '%', user.role === "premium" ? 10 : 3], (error, resultSQL) => {
             if (error) {
                 res.render('walletView.ejs', { user : null, max_reached: true, types : null, notification : error + ". Please contact the webmaster" })
-                return;
             } else {
                 console.log(resultSQL)
                 toolbox.fetchAllTypes().then(result => {
@@ -51,7 +47,6 @@ exports.searchWallet = (req, res) => {
                         user.wallet_list.push(new Wallet(w.id, mapping_label_id_types[w.type], w.label, w.creation_date, [], user.id))
                     });
                     res.render('walletView.ejs', { user, max_reached: req.body.max_reached, types: result, notification : req.body.notification })
-                    return;
                 }).catch(error => {
                     res.render('walletView.ejs', { user : null, max_reached: true, types : null, notification : error + ". Please contact the webmaster" })
                 });
@@ -59,7 +54,6 @@ exports.searchWallet = (req, res) => {
         });
     }).catch(error => {
         res.render('walletView.ejs', { user : null, max_reached: true, types : null, notification : error + ". Please contact the webmaster" })
-        return;
     });
 }
 
@@ -93,18 +87,15 @@ exports.createWallet = (req, res) => {
             if (error) {
                 req.body.notification = error + ". Please contact the webmaster"
                 this.fetchAllWallets(req, res);
-                return;
             } else {
                 req.body.notification = "Ajout effectué"
                 wallet.id = resultSQL.insertId;
                 this.fetchAllWallets(req, res);
-                return;
             }
         });
     }).catch(error => {
         req.body.notification = error + ". Please contact the webmaster"
         this.fetchAllWallets(req, res);
-        return;
     });
 }
 
@@ -117,11 +108,9 @@ exports.deleteWallet = (req, res) => {
         if (error) {
             req.body.notification = error + ". Please contact the webmaster"
             this.fetchAllWallets(req, res);
-            return;
         } else {
             req.body.notification = "Suppression effectuée  "
             this.fetchAllWallets(req, res);
-            return;
         }
     });
 }
@@ -134,10 +123,8 @@ exports.renameWallet = (req, res) => {
     db.db.query("UPDATE wallets SET label = ? WHERE id = ? AND user_id = ?;", [wallet.label, wallet.id, wallet.user_id], (error, resultSQL) => {
         if (error) {
             res.redirect('/wallets/' + wallet.id)
-            return;
         } else {
             res.redirect('/wallets/' + wallet.id)
-            return;
         }
     });
 }

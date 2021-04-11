@@ -1,30 +1,11 @@
-let Asset = require('../models/assetModel');
-
 const db = require('../self_modules/db');
 const toolbox = require("../self_modules/toolbox");
-
-exports.fetchAllAssets = (req, res) => {
-    db.db.query("SELECT * FROM assets;", (error, resultSQL) => {
-        if (error) {
-            res.status(500).send(error)
-            return;
-        } else {
-            /*resultSQL.forEach(r => {
-                delete r.id
-            });*/
-            res.status(200).json(resultSQL)
-            return;
-        }
-    });
-}
-
 
 exports.fetchWalletAllAssets = (req, res) => {
     toolbox.fetchAssetsBasedOnType(req.params.id_wallet).then(assetsFromType => {
         db.db.query("SELECT DISTINCT a.ticker, a.label, aw.id_wallet, aw.id, aw.quantity, aw.invested_amount, aw.price_alert, w.type FROM assets AS a, wallets AS w, assets_wallets AS aw WHERE aw.id_wallet = ? AND aw.id_asset = a.id AND w.user_id = ? AND w.id = aw.id_wallet;", [req.params.id_wallet, req.body.user_id], (error, resultSQL) => {
             if (error) {
                 res.redirect('/wallets')
-                return;
             } else {
                 toolbox.mapping_label_id_types().then(mapping => {
                     if ((mapping[assetsFromType.type]) === "Crypto-assets") {
@@ -42,21 +23,16 @@ exports.fetchWalletAllAssets = (req, res) => {
                                 }
                             })
                             res.render("assetView.ejs", { resultSQL, apiInfos: newDict, assetsFromType: assetsFromType.assets, id_wallet: req.params.id_wallet })
-                            return;
                         }).catch(error => {
                             res.redirect('/wallets')
-                            return;
                         })
                     } else if ((mapping[assetsFromType.type]) === "Stocks") {
                         res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.params.id_wallet })
-                        return;
                     } else {
                         res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.params.id_wallet })
-                        return;
                     }
                 }).catch(error => {
                     res.redirect('/wallets')
-                    return;
                 })
             }
         });
@@ -70,7 +46,6 @@ exports.searchAsset = (req, res) => {
         db.db.query("SELECT DISTINCT a.ticker, a.label, aw.id_wallet, aw.id, aw.quantity, aw.invested_amount, aw.price_alert, w.type FROM assets AS a, wallets AS w, assets_wallets AS aw WHERE aw.id_wallet = ? AND aw.id_asset = a.id AND w.user_id = ? AND w.id = aw.id_wallet AND a.label LIKE ?;", [req.body.wallet_id, req.body.user_id, '%' + req.body.searchLike + '%'], (error, resultSQL) => {
             if (error) {
                 res.redirect('/wallets')
-                return;
             } else {
                 toolbox.mapping_label_id_types().then(mapping => {
                     if ((mapping[assetsFromType.type]) === "Crypto-assets") {
@@ -88,21 +63,16 @@ exports.searchAsset = (req, res) => {
                                 }
                             })
                             res.render("assetView.ejs", { resultSQL, apiInfos: newDict, assetsFromType: assetsFromType.assets, id_wallet: req.body.wallet_id })
-                            return;
                         }).catch(error => {
                             res.redirect('/wallets')
-                            return;
                         })
                     } else if ((mapping[assetsFromType.type]) === "Stocks") {
                         res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.body.wallet_id })
-                        return;
                     } else {
                         res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.body.wallet_id })
-                        return;
                     }
                 }).catch(error => {
                     res.redirect('/wallets')
-                    return;
                 })
             }
         });
@@ -119,10 +89,8 @@ exports.addAsset = (req, res) => {
     db.db.query("INSERT INTO assets_wallets (id_wallet, id_asset, quantity, invested_amount) VALUES(?,?,?,?);", [req.body.wallet_id, req.body.asset_id, req.body.quantity, req.body.invested_amount], (error, resultSQL) => {
         if (error) {
             res.redirect('/wallets/' + req.body.wallet_id)
-            return;
         } else {
             res.redirect('/wallets/' + req.body.wallet_id)
-            return;
         }
     });
 }
@@ -131,10 +99,8 @@ exports.removeAsset = (req, res) => {
     db.db.query("DELETE FROM assets_wallets WHERE id = ?;", [JSON.parse(req.body.assetInfos).id], (error, resultSQL) => {
         if (error) {
             res.redirect('/wallets/' + req.body.wallet_id)
-            return;
         } else {
             res.redirect('/wallets/' + req.body.wallet_id)
-            return;
         }
     });
 }
@@ -152,11 +118,9 @@ exports.changeQtyAsset = (req, res) => {
     db.db.query("UPDATE assets_wallets SET quantity = ? WHERE id = ?;", [req.body.quantity, assetParsed.id], (error, resultSQL) => {
         if (error) {
             res.render('assetInfoView.ejs', { api, asset: assetParsed, notification: "Erreur inconnue" })
-            return;
         } else {
             assetParsed.quantity = req.body.quantity
             res.render('assetInfoView.ejs', { api, asset: assetParsed })
-            return;
         }
     });
 }
@@ -170,25 +134,20 @@ exports.setPriceAlert = (req, res) => {
         db.db.query("SELECT * FROM users WHERE id = ? AND role = ?;", [req.body.user_id, mapping["premium"]], (error, resultSQL) => {
             if (error) {
                 res.status(500).send(error)
-                return;
             } else if (resultSQL.length) {
                 res.status(403).send("Il s'agit d'une fonctionnalité premium")
-                return;
             } else {
                 db.db.query("UPDATE assets_wallets SET price_alert = ? WHERE id_wallet = ? AND id_asset = ?;", [req.body.price_alert, req.body.wallet_id, req.body.asset_id], (error, resultSQL) => {
                     if (error) {
                         res.status(500).send(error)
-                        return;
                     } else {
                         res.status(200).send("Mise à jour effectuée")
-                        return;
                     }
                 });
             }
         });
     }).catch(err => {
         res.status(500).send(err);
-        return;
     })
 }
 
@@ -205,11 +164,9 @@ exports.changeInitialInvestment = (req, res) => {
     db.db.query("UPDATE assets_wallets SET invested_amount = ? WHERE id = ?;", [req.body.invested_amount, assetParsed.id], (error, resultSQL) => {
         if (error) {
             res.render('assetInfoView.ejs', { api, asset: assetParsed, notification: "Le montant est incorrect" })
-            return;
         } else {
             assetParsed.invested_amount = req.body.invested_amount
             res.render('assetInfoView.ejs', { api, asset: assetParsed })
-            return;
         }
     })
 }
@@ -220,7 +177,6 @@ exports.infoAsset = (req, res) => {
         if (req.body.apiInfos != undefined) {
             api = JSON.parse(req.body.apiInfos)
             res.render('assetInfoView.ejs', { api, asset: JSON.parse(req.body.assetInfos) })
-            return;
         } else if (mapping[JSON.parse(req.body.assetInfos).type] === "Stocks") {
             toolbox.actionValueCall(JSON.parse(req.body.assetInfos).ticker).then(result => {
                 api = {
@@ -233,14 +189,11 @@ exports.infoAsset = (req, res) => {
                     type: "Stocks"
                 }
                 res.render('assetInfoView.ejs', { api, asset: JSON.parse(req.body.assetInfos) })
-                return;
             }).catch(error => {
                 res.redirect('/wallets/' + JSON.parse(req.body.assetInfos).id_wallet)
-                return;
             })
         }
     }).catch(error => {
         res.redirect('/wallets/' + JSON.parse(req.body.assetInfos).id_wallet)
-        return;
     })
 }

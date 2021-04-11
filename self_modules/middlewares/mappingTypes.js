@@ -12,8 +12,7 @@ module.exports = (req, res, callback) => {
         if (error) {
             req.body.notification = error.sqlMessage + ". Please contact the webmaster"
             callback();
-        }
-        else {
+        } else {
             let mapping = {}
             resultSQL.forEach(r => {
                 mapping[r.id] = r.label;
