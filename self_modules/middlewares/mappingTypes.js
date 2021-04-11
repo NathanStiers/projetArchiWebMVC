@@ -10,8 +10,8 @@ const db = require('../db');
 module.exports = (req, res, callback) => {
     db.db.query("SELECT * FROM types;", (error, resultSQL) => {
         if (error) {
-            res.redirect('/login')
-            return;
+            req.body.notification = error.sqlMessage + ". Please contact the webmaster"
+            callback();
         }
         else {
             let mapping = {}
@@ -21,7 +21,6 @@ module.exports = (req, res, callback) => {
             });
             req.body.mapping_types = mapping
             callback()
-            return;
         }
     });
 }

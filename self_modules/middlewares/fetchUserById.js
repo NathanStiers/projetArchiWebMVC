@@ -11,6 +11,7 @@ const toolbox = require('../toolbox')
 module.exports = (req, res, callback) => {
     let id = req.body.user_id
     if (!toolbox.checkMail(id)) {
+        // error msg
         res.redirect('/login')
         return;
     }

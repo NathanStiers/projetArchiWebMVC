@@ -11,7 +11,7 @@ module.exports = (req, res, callback) => {
     db.db.query("SELECT * FROM roles;", (error, resultSQL) => {
         if (error) {
             req.body.notification = error.sqlMessage + ". Please contact the webmaster"
-            return callback();
+            callback();
         }
         else {
             let mapping = {}
@@ -20,7 +20,7 @@ module.exports = (req, res, callback) => {
                 mapping[r.label] = r.id;
             });
             req.body.mapping_roles = mapping
-            return callback();
+            callback();
         }
     });
 }

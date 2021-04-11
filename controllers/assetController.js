@@ -244,8 +244,3 @@ exports.infoAsset = (req, res) => {
         return;
     })
 }
-
-__fetchTypeAssets = (type) => {
-    //permet de récupérer les assets d'un certain type dans le base de données
-}
-
