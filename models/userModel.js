@@ -1,7 +1,7 @@
 class User{
 
     /**
-     * Permet la création d'une instance d'utilisateur
+     * Allows the creation of a user instance
      * 
      * @param {number} id The id of the user
      * @param {number} role The role's id of the user

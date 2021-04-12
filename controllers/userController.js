@@ -16,12 +16,12 @@ const saltRounds = 12;
  */
 exports.createUser = (req, res) => {
     if (req.body.password !== req.body.passwordConfirm) {
-        req.flash('notification', 'Les mots de passe ne correspondent pas');
+        req.flash('notification', 'Passwords do not match');
         res.redirect('/subscribe')
         return;
     }
     if(req.body.name === "" || req.body.surname === "" || req.body.mail === "" || req.body.password === ""){
-        req.flash('notification', 'Veuillez remplir tous les champs du formulaire');
+        req.flash('notification', 'Please fill in all fields of the form');
         res.redirect('/subscribe')
         return;
     }
@@ -34,7 +34,7 @@ exports.createUser = (req, res) => {
         }
         user.password = hash;
         if (!toolbox.checkMail(user.mail)) { //Check all info user
-            req.flash('notification', 'Le mail ne correspond pas au bon format');
+            req.flash('notification', 'The mail does not correspond to the right format');
             res.redirect('/subscribe')
             return;
         }
@@ -42,13 +42,11 @@ exports.createUser = (req, res) => {
         db.db.query("INSERT INTO users (role, name, surname, mail, password) VALUES (?, ?, ?, ?, ?);", [mapping_roles['basic'], user.name, user.surname, user.mail, user.password], (error, resultSQL) => {
             if (error) {
                 if (error.errno === 1062) {
-                    req.flash('notification', 'Ce mail est déjà utilisé');
+                    req.flash('notification', 'This mail is already in use');
                     res.redirect('/subscribe')
-                    return;
                 } else {
                     req.flash('notification', error + '. Please contact the webmaster');
                     res.redirect('/subscribe')
-                    return;
                 }
             } else {
                 user.id = resultSQL.insertId;
@@ -75,7 +73,6 @@ exports.connectUser = (req, res) => {
         if (error) {
             req.flash('notification', error + '. Please contact the webmaster');
             res.redirect('/login')
-            return;
         } else if (result) {
             delete req.body.user.password
             const token = jwt.sign({ user_id: req.body.user.id, user_role: req.body.user.role }, process.env.ACCESS_TOKEN_SECRET);
@@ -84,9 +81,8 @@ exports.connectUser = (req, res) => {
             res.cookie('Token', token, { maxAge: expires });
             res.redirect('/wallets')
         } else {
-            req.flash('notification', 'Authentification incorrecte');
+            req.flash('notification', 'Invalid authentication');
             res.redirect('/login')
-            return;
         }
     });
 }
@@ -100,7 +96,7 @@ exports.connectUser = (req, res) => {
 exports.upgradeUser = (req, res) => {
     let mapping_roles = req.body.mapping_roles
     if (req.body.user_role === "premium") {
-        req.flash('notification', 'Vous êtes déjà premium');
+        req.flash('notification', 'You are already a premium user');
         res.redirect('/premium')
         return;
     }
@@ -108,15 +104,13 @@ exports.upgradeUser = (req, res) => {
         if (error) {
             req.flash('notification', error + '. Please contact the webmaster');
             res.redirect('/premium')
-            return;
         } else {
             const token = jwt.sign({ user_id: req.body.user_id, user_role: "premium" }, process.env.ACCESS_TOKEN_SECRET);
             let d = new Date();
             let expires = d.setTime(d.getTime() + 6 * 60 * 60 * 1000);
             res.cookie('Token', token, { maxAge: expires });
-            req.flash('notification', 'Vous êtes maintenant premium');
+            req.flash('notification', 'You are now a premium user');
             res.redirect('/premium')
-            return;
         }
     })
 }
@@ -144,16 +138,13 @@ exports.forgotPwdUser = (req, res) => {
             if (error) {
                 req.flash('notification', error + '. Please contact the webmaster');
                 res.redirect('/login')
-                return;
             } else {
                 toolbox.sendMail(mail, "Confidential : Your new password", newPassword).then(result => {
-                    req.flash('notification', "Email envoyé à : " + mail);
+                    req.flash('notification', "Email sent to : " + mail);
                     res.redirect('/login')
-                    return;
                 }).catch(error => {
                     req.flash('notification', error + '. Please contact the webmaster');
                     res.redirect('/login')
-                    return;
                 });
             }
         });

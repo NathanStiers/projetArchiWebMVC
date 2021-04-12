@@ -34,7 +34,6 @@ exports.fetchWalletAllAssets = (req, res) => {
                     }).catch(error => {
                         req.flash('notification', error + '. Please contact the webmaster');
                         res.redirect('/wallets')
-                        return;
                     })
                 } else if ((mapping_types[assetsFromType.type]) === "Stocks") {
                     res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.params.id_wallet, notification: "The Stocks API is not linked yet" })
@@ -46,7 +45,6 @@ exports.fetchWalletAllAssets = (req, res) => {
     }).catch(error => {
         req.flash('notification', error + '. Please contact the webmaster');
         res.redirect('/wallets')
-        return;
     })
 }
 
@@ -83,7 +81,7 @@ exports.searchAsset = (req, res) => {
                     }).catch(error => {
                         req.flash('notification', error + '. Please contact the webmaster');
                         res.redirect('/wallets')
-                        return;                    })
+                    })
                 } else if ((mapping_types[assetsFromType.type]) === "Stocks") {
                     res.render("assetView.ejs", { resultSQL, assetsFromType: assetsFromType.assets, id_wallet: req.body.wallet_id })
                 } else {
@@ -94,7 +92,6 @@ exports.searchAsset = (req, res) => {
     }).catch(error => {
         req.flash('notification', error + '. Please contact the webmaster');
         res.redirect('/wallets')
-        return;    
     })
 }
 
@@ -106,7 +103,17 @@ exports.searchAsset = (req, res) => {
  */
 exports.addAsset = (req, res) => {
     if (req.body.wallet_type !== req.body.asset_type) {
-        req.flash('notification', 'Le type de l\'actif ne correspond pas à celui du portefeuille');
+        req.flash('notification', 'Asset type does not match wallet type');
+        res.redirect('/wallets/' + req.body.wallet_id)
+        return;
+    }
+    if (req.body.quantity === '' || req.body.invested_amount === '' || isNaN(req.body.invested_amount)) {
+        req.flash('notification', 'Please fill in all fields of the form');
+        res.redirect('/wallets/' + req.body.wallet_id)
+        return;
+    }
+    if (isNaN(req.body.quantity) || isNaN(req.body.invested_amount) || req.body.quantity < 0 || req.body.invested_amount < 0) {
+        req.flash('notification', 'The amount is invalid');
         res.redirect('/wallets/' + req.body.wallet_id)
         return;
     }
@@ -114,11 +121,9 @@ exports.addAsset = (req, res) => {
         if (error) {
             req.flash('notification', error + '. Please contact the webmaster');
             res.redirect('/wallets/' + req.body.wallet_id)
-            return;
         } else {
-            req.flash('notification', 'Ajout effectué');
+            req.flash('notification', 'Correctly added');
             res.redirect('/wallets/' + req.body.wallet_id)
-            return;        
         }
     });
 }
@@ -134,11 +139,9 @@ exports.removeAsset = (req, res) => {
         if (error) {
             req.flash('notification', error + '. Please contact the webmaster');
             res.redirect('/wallets/' + req.body.wallet_id)
-            return;
         } else {
-            req.flash('notification', 'Suppression effectué');
+            req.flash('notification', 'Correctly removed');
             res.redirect('/wallets/' + req.body.wallet_id)
-            return;        
         }
     });
 }
@@ -155,13 +158,13 @@ exports.changeQtyAsset = (req, res) => {
     if (req.body.apiInfos != undefined) {
         api = JSON.parse(req.body.apiInfos)
     }
-    if (req.body.quantity <= 0) {
-        res.render('assetInfoView.ejs', { api, asset: assetParsed, notification: "La quantité est invalide" })
+    if (req.body.quantity === '' || isNaN(req.body.invested_amount) || req.body.quantity <= 0) {
+        res.render('assetInfoView.ejs', { api, asset: assetParsed, notification: "The quantity is invalid" })
         return;
     }
     db.db.query("UPDATE assets_wallets SET quantity = ? WHERE id = ?;", [req.body.quantity, assetParsed.id], (error, resultSQL) => {
         if (error) {
-            res.render('assetInfoView.ejs', { api, asset: assetParsed, notification: "Erreur inconnue" })
+            res.render('assetInfoView.ejs', { api, asset: assetParsed, notification: error + '. Please contact the webmaster' })
         } else {
             assetParsed.quantity = req.body.quantity
             res.render('assetInfoView.ejs', { api, asset: assetParsed })
@@ -178,21 +181,21 @@ exports.changeQtyAsset = (req, res) => {
  */
 exports.setPriceAlert = (req, res) => {
     if (req.body.price_alert <= 0) {
-        res.status(403).send("Le montant est incorrect")
+        //res.status(403).send("The amount is invalid")
         return;
     }
     let mapping_roles = req.body.mapping_roles
     db.db.query("SELECT * FROM users WHERE id = ? AND role = ?;", [req.body.user_id, mapping_roles["premium"]], (error, resultSQL) => {
         if (error) {
-            res.status(500).send(error)
+            //res.status(500).send(error)
         } else if (resultSQL.length) {
-            res.status(403).send("Il s'agit d'une fonctionnalité premium")
+            //res.status(403).send("This is a premium feature")
         } else {
             db.db.query("UPDATE assets_wallets SET price_alert = ? WHERE id_wallet = ? AND id_asset = ?;", [req.body.price_alert, req.body.wallet_id, req.body.asset_id], (error, resultSQL) => {
                 if (error) {
-                    res.status(500).send(error)
+                    //res.status(500).send(error)
                 } else {
-                    res.status(200).send("Mise à jour effectuée")
+                    //res.status(200).send("Update completed")
                 }
             });
         }
@@ -212,13 +215,13 @@ exports.changeInitialInvestment = (req, res) => {
     if (req.body.apiInfos != undefined) {
         api = JSON.parse(req.body.apiInfos)
     }
-    if (req.body.invested_amount <= 0) {
-        res.render('assetInfoView.ejs', { api, asset: assetParsed, notification: "Le montant est incorrect" })
+    if (req.body.invested_amount === '' || isNaN(req.body.invested_amount) || req.body.invested_amount <= 0) {
+        res.render('assetInfoView.ejs', { api, asset: assetParsed, notification: "The amount is invalid" })
         return;
     }
     db.db.query("UPDATE assets_wallets SET invested_amount = ? WHERE id = ?;", [req.body.invested_amount, assetParsed.id], (error, resultSQL) => {
         if (error) {
-            res.render('assetInfoView.ejs', { api, asset: assetParsed, notification: "Le montant est incorrect" })
+            res.render('assetInfoView.ejs', { api, asset: assetParsed, notification: error + '. Please contact the webmaster' })
         } else {
             assetParsed.invested_amount = req.body.invested_amount
             res.render('assetInfoView.ejs', { api, asset: assetParsed })
@@ -253,7 +256,6 @@ exports.infoAsset = (req, res) => {
         }).catch(error => {
             req.flash('notification', error + '. Please contact the webmaster');
             res.redirect('/wallets/' + JSON.parse(req.body.assetInfos).id_wallet)
-            return;
         })
     }
 }

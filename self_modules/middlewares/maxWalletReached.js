@@ -11,7 +11,7 @@ module.exports = (req, res, callback) => {
     db.db.query("SELECT COUNT(id) AS count FROM wallets WHERE user_id = ?;", req.body.user_id, (error, resultSQLCount) => {
         if (error) {
             req.flash('notification', error + ". Please contact the webmaster");
-            callback();
+            res.redirect('/')
         } else {
             let count = resultSQLCount[0].count;
             let role = req.body.user_role

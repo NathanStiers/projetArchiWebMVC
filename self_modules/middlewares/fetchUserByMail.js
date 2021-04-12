@@ -11,16 +11,17 @@ const toolbox = require('../toolbox')
 module.exports = (req, res, callback) => {
     let mail = req.body.mail
     if (!toolbox.checkMail(mail)) {
-        req.body.notification = "L'email ne respecte pas le bon format"
+        req.flash('notification', error + '. Please contact the webmaster');
+        res.redirect('/')
     } else {
         db.db.query("SELECT * FROM users WHERE mail = ?;", mail, (error, resultSQL) => {
             if (error) {
-                req.body.notification = error.sqlMessage + ". Please contact the webmaster"
-                callback()
+                req.flash('notification', error.sqlMessage + '. Please contact the webmaster');
+                res.redirect('/')
             } else {
                 if (resultSQL.length === 0) {
-                    req.body.notification = "Cet utilisateur n'existe pas"
-                    callback()
+                    req.flash('notification', 'This user does not exist');
+                    res.redirect('/')
                 } else {
                     let mapping_roles = req.body.mapping_roles
                     resultSQL[0].role = mapping_roles[resultSQL[0].role]

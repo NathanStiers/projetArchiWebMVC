@@ -10,7 +10,8 @@ const jwt = require('jsonwebtoken');
 module.exports = (req, res, callback) => {
     jwt.verify(req.cookies.Token, process.env.ACCESS_TOKEN_SECRET, (error, payload) => {
         if (error) {
-            res.redirect('/login')
+            req.flash('notification', error + '. Please contact the webmaster');
+            res.redirect('/')
         } else {
             req.body.user_id = payload.user_id
             req.body.user_role = payload.user_role

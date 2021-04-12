@@ -48,11 +48,10 @@ exports.searchWallet = (req, res) => {
                 resultSQL.forEach(w => {
                     user.wallet_list.push(new Wallet(w.id, mapping_types[w.type], w.label, w.creation_date, [], user.id))
                 });
-                res.render('walletView.ejs', { user, max_reached: req.body.max_reached, types: result, notification : req.body.notification })
+                res.render('walletView.ejs', { user, max_reached: req.body.max_reached, types: result, notification : req.flash().notification })
             }).catch(error => {
                 req.flash('notification', error + '. Please contact the webmaster');
                 res.redirect('/wallets')
-                return;
             });
         }
     });
@@ -66,12 +65,12 @@ exports.searchWallet = (req, res) => {
  */
 exports.createWallet = (req, res) => {
     if(req.body.max_reached){
-        req.flash('notification', 'Vous avez atteint votre nombre maximum de portefeuille');
+        req.flash('notification', 'You have reached your maximum number of wallets');
         res.redirect('/wallets')
         return;
     }
     if(req.body.label === ""){
-        req.flash('notification', 'Le label ne peut pas être vide');
+        req.flash('notification', 'The label cannot be empty');
         res.redirect('/wallets')
         return;
     }
@@ -82,7 +81,7 @@ exports.createWallet = (req, res) => {
         ('00' + date.getUTCDate()).slice(-2)
     let wallet = new Wallet(null, req.body.type, req.body.label, date, [], req.body.user_id);
     if(wallet.type !== "Stocks" && wallet.type !== "Crypto-assets"){
-        req.flash('notification', 'Ce type n\'est pas encore utilisable');
+        req.flash('notification', 'This type is not yet available');
         res.redirect('/wallets')
         return;
     }
@@ -90,11 +89,9 @@ exports.createWallet = (req, res) => {
         if (error) {
             req.flash('notification', error + '. Please contact the webmaster');
             res.redirect('/wallets')
-            return;
         } else {
-            req.flash('notification', 'Ajout effectué');
+            req.flash('notification', 'Correctly added');
             res.redirect('/wallets')
-            return;
         }
     });
 }
@@ -111,11 +108,9 @@ exports.deleteWallet = (req, res) => {
         if (error) {
             req.flash('notification', error + '. Please contact the webmaster');
             res.redirect('/wallets')
-            return;
         } else {
-            req.flash('notification', 'Suppression effectuée');
+            req.flash('notification', 'Correctly deleted');
             res.redirect('/wallets')
-            return;
         }
     });
 }
@@ -128,15 +123,18 @@ exports.deleteWallet = (req, res) => {
  */
 exports.renameWallet = (req, res) => {
     let wallet = new Wallet(req.body.wallet_id, null, req.body.label, null, [], req.body.user_id);
+    if(wallet.label === ""){
+        req.flash('notification', 'The label cannot be empty');
+        res.redirect('/wallets/' + wallet.id)
+        return;
+    }
     db.db.query("UPDATE wallets SET label = ? WHERE id = ? AND user_id = ?;", [wallet.label, wallet.id, wallet.user_id], (error, resultSQL) => {
         if (error) {
             req.flash('notification', error + '. Please contact the webmaster');
             res.redirect('/wallets/' + wallet.id)
-            return;
         } else {
-            req.flash('notification', 'Changement de label réussi');
+            req.flash('notification', 'Successful change of label');
             res.redirect('/wallets/' + wallet.id)
-            return;
         }
     });
 }

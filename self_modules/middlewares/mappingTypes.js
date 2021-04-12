@@ -10,8 +10,8 @@ const db = require('../db');
 module.exports = (req, res, callback) => {
     db.db.query("SELECT * FROM types;", (error, resultSQL) => {
         if (error) {
-            req.body.notification = error.sqlMessage + ". Please contact the webmaster"
-            callback();
+            req.flash('notification', error.sqlMessage + '. Please contact the webmaster');
+            res.redirect('/')
         } else {
             let mapping = {}
             resultSQL.forEach(r => {

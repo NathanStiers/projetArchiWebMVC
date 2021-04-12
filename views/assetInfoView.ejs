@@ -11,7 +11,7 @@
 
     <!-- Change the quantity of a specific asset form -->
     <form action="/assets/changeQty" method="post">
-        Quantity : <input type="text" name="quantity" placeholder="<%= asset.quantity %>" value="<%= asset.quantity %>" />
+        Quantity : <input type="number" name="quantity" placeholder="<%= asset.quantity %>" value="<%= asset.quantity %>" step="0.000000001" />
         <input type="hidden" name="wallet_id" value="<%= asset.id_wallet %>">
         <% let jsonsql=JSON.stringify(asset) %>
         <input type="hidden" name="assetInfos" value="<%= jsonsql %>">
@@ -24,7 +24,7 @@
 
     <!-- Change the initial investment of a specific asset form -->
     <form action="/assets/changeInvestment" method="post">
-        Amount invested : <input type="text" name="invested_amount" placeholder="<%= asset.invested_amount %>" value="<%= asset.invested_amount %>" />
+        Amount invested : <input type="number" name="invested_amount" placeholder="<%= asset.invested_amount %>" value="<%= asset.invested_amount %>" step="0.001" />
         <input type="hidden" name="wallet_id" value="<%= asset.id_wallet %>">    
         <input type="hidden" name="assetInfos" value="<%= jsonsql %>">
         <% if(typeof apiInfos !=='undefined' ) { %>
@@ -38,7 +38,7 @@
         <span class="modal__title">Deeper information</span>
         <div class="modal__content">
             <% let pru = asset.invested_amount/asset.quantity %>
-            <p>Unit cost price : <%= pru %> €</p>
+            <p>Unit cost price : <%= pru.toFixed(2) %> €</p>
             <% if(typeof api !=='undefined' ) { %>
                 <p>Current value : <%= (api.price * asset.quantity).toFixed(2) %> €</p>
             <% } %>

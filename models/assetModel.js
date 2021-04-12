@@ -1,7 +1,7 @@
 class Asset{
 
     /**
-     * Permet la création d'une instance d'actif
+     * Allows the creation of an asset instance
      * 
      * @param {number} id The id of the asset
      * @param {number} type The type's id of the asset

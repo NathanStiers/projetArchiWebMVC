@@ -1,7 +1,7 @@
 class Wallet{
 
     /**
-     * Permet la création d'une instance de portefeuille
+     * Allows the creation of a wallet instance
      * 
      * @param {number} id The id of the wallet
      * @param {number} type The type's id of the wallet

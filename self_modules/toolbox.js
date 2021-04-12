@@ -90,7 +90,7 @@ exports.fetchAllTypes = () => {
 }
 
 /**
- * Retrieves the assets in the database with the same type as the selected portfolio
+ * Retrieves the assets in the database with the same type as the selected wallet
  * 
  * @param {number} id The id of the wallet 
  * @returns {Promise} Fetch all the assets and return a promise

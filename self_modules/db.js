@@ -19,10 +19,10 @@ let connect = ()=>{
             database: dbName
         })
 
-        dbClient.connect((err)=>{
-            if(err){
-                console.info("[Db] Unable to connect to server: " + err);
-                reject(err)
+        dbClient.connect((error)=>{
+            if(error){
+                console.info("[Db] Unable to connect to server: " + error);
+                reject(error)
             } else {
                 console.info("[Db] Connected successfully to server")
                 exports.db = dbClient
