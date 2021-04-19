@@ -1,5 +1,6 @@
 # How to start the MVC website
 - Check that all dependencies are installed (npm install / npm update).
+- Import the db.sql in MySQL Workbench.
 - Check that the data in the .env are up to date.
 - Use the "npm start" command to start the server or "npm run dev" if nodemon need to be started.
 - You are all set !
