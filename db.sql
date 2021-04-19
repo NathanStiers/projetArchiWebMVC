@@ -151,7 +151,7 @@ INSERT INTO `ProjetArchiWeb`.`Types` (id, label) VALUES (6, 'Crowdlending');
 -- Passwords = cMX0xhyJit
 -- -----------------------------------------------------
 INSERT INTO `ProjetArchiWeb`.`Users` (id, role, name, surname, mail, password) VALUES (1, 2, 'Stiers', 'Nathan', 'nathan.stiers@gmail.com', '$2b$12$tkkjspr51dAaPZ7/2idFgOkZMw1/owSAAucVWoX.XrITq7Cx869Ey');
-INSERT INTO `ProjetArchiWeb`.`Users` (id, role, name, surname, mail, password) VALUES (2, 1, 'Thewissen', 'Aurélie', 'aurelie.thewissen@outlook.be', '$2b$12$tkkjspr51dAaPZ7/2idFgOkZMw1/owSAAucVWoX.XrITq7Cx869Ey');
+INSERT INTO `ProjetArchiWeb`.`Users` (id, role, name, surname, mail, password) VALUES (2, 1, 'Thewissen', 'Aurelie', 'aurelie.thewissen@outlook.be', '$2b$12$tkkjspr51dAaPZ7/2idFgOkZMw1/owSAAucVWoX.XrITq7Cx869Ey');
 
 -- -----------------------------------------------------
 -- INSERTS `ProjetArchiWeb`.`Wallets`
@@ -188,7 +188,7 @@ INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (18, 1, '
 INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (19, 1, 'UMICORE', 'UMI');
 INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (20, 1, 'WAREHOUSES DE PAUW', 'WDP');
 -- -----------------------------------------------------
--- CoinMarketCap TOP 10
+-- CoinMarketCap TOP 25
 -- -----------------------------------------------------
 INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (21, 2, 'BITCOIN', 'BTC');
 INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (22, 2, 'ETHEREUM', 'ETH');
@@ -200,6 +200,21 @@ INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (27, 2, '
 INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (28, 2, 'UNISWAP', 'UNI');
 INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (29, 2, 'LITECOIN', 'LTC');
 INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (30, 2, 'CHAINLINK', 'LINK');
+INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (31, 2, 'BITCOIN CASH', 'BCH');
+INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (32, 2, 'VECHAIN', 'VET');
+INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (33, 2, 'DOGE COIN', 'DOGE');
+INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (34, 2, 'STELLAR', 'XLM');
+INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (35, 2, 'USD COIN', 'USDC');
+INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (36, 2, 'THETA', 'THETA');
+INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (37, 2, 'FILECOIN', 'FIL');
+INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (38, 2, 'TRON', 'TRX');
+INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (39, 2, 'WRAPPED BITCOIN', 'WBTC');
+INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (40, 2, 'SOLANA', 'SOL');
+INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (41, 2, 'EOS', 'EOS');
+INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (42, 2, 'NEO', 'NEO');
+INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (43, 2, 'BITCOIN SV', 'BSV');
+INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (44, 2, 'KLAYTN', 'KLAY');
+INSERT INTO `ProjetArchiWeb`.`Assets` (id, type, label, ticker) VALUES (45, 2, 'MONERO', 'XMR');
 
 -- -----------------------------------------------------
 -- INSERTS `ProjetArchiWeb`.`Assets_wallets`

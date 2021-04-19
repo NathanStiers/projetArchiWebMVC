@@ -33,7 +33,7 @@ exports.createUser = (req, res) => {
             return;
         }
         user.password = hash;
-        if (!toolbox.checkMail(user.mail)) { //Check all info user
+        if (!toolbox.checkMail(user.mail)) { 
             req.flash('notification', 'The mail does not correspond to the right format');
             res.redirect('/subscribe')
             return;

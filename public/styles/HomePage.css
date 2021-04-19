@@ -25,6 +25,12 @@
 #welcome::-webkit-scrollbar {
     display: none;
 }
+
+#title{
+    color: #35495e;
+    font-size: 3rem;
+    font-weight: 500;
+}
   
 #subAndLog{
     width: 80vw;

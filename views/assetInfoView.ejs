@@ -41,6 +41,9 @@
             <p>Unit cost price : <%= pru.toFixed(2) %> €</p>
             <% if(typeof api !=='undefined' ) { %>
                 <p>Current value : <%= (api.price * asset.quantity).toFixed(2) %> €</p>
+                <p>Max supply : <%= api.max_supply %> unités</p>
+                <p>Total supply : <%= api.total_supply %> unités</p>
+                <p>Market cap : <%= (api.market_cap).toFixed(2) %> €</p>
             <% } %>
         </div>
         <div class="modal__action">

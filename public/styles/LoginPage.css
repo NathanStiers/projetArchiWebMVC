@@ -12,6 +12,49 @@
     height: 13vmin;
     margin-bottom: 7vmin;
 }
+
+#login{
+    border: solid medium black;
+    margin: auto;
+    min-width: 250px;
+    width: 30%;
+}
+
+#form{
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    flex-flow: column nowrap;
+    justify-content: center;
+}
+
+input{
+    margin-bottom:0.5rem;
+}
+
+h1{
+    text-align: center;
+}
+
+form{
+    padding: 0em 1em 0em 1em;
+}
+
+.button {
+    text-align: center;
+    background-color: #42b983;
+    border-radius: 30px;
+    border: 1px solid #18ab29;
+    cursor: pointer;
+    color: #ffffff;
+    font-size:large;
+    text-decoration:none;
+    text-shadow:0px 1px 0px #2f6627;
+    width: 30vmin;
+    line-height: 4vmin;
+    height: 4vmin;
+    margin-bottom: 2rem;
+}
   
 #logo{
     margin-right: auto;

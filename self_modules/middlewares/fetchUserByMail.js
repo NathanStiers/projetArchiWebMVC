@@ -11,7 +11,7 @@ const toolbox = require('../toolbox')
 module.exports = (req, res, callback) => {
     let mail = req.body.mail
     if (!toolbox.checkMail(mail)) {
-        req.flash('notification', error + '. Please contact the webmaster');
+        req.flash('notification', 'The mail doesn\'t use a correct format');
         res.redirect('/')
     } else {
         db.db.query("SELECT * FROM users WHERE mail = ?;", mail, (error, resultSQL) => {

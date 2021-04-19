@@ -8,17 +8,34 @@
     <%- include('./fragments/notificationFragment.ejs'); -%>
     <div class="subscribe">
         <h1>Subscribe page</h1>
-
         <!-- Create a new account form -->
-        <form action="/user/create" method="post">
-            <div>
-                Name : <input name="name" type="text" id="">
-                Surname : <input name="surname" type="text" id="">
-                Mail : <input name="mail" type="text" id="">
-                Password : <input name="password" type="password" id="">
-                Confirm password : <input name="passwordConfirm" type="password" id="">
+        <form action="/user/create" method="post" >
+            <fieldset class="formContainer">
+                <legend>Enter your profile information</legend>
+                <div class="inputContainer">
+                    <label for="name">Name : </label>
+                    <input name="name" type="text" id="name" required>
+                </div>
+                <div class="inputContainer">
+                    <label for="surname">Surname : </label>
+                    <input name="surname" type="text" id="surname" required>
+                </div>
+                <div class="inputContainer">
+                    <label for="mail">Mail : </label>
+                    <input name="mail" type="mail" id="mail" required>
+                </div>
+                <div class="inputContainer">
+                    <label for="password">Password : </label>
+                    <input name="password" type="password" id="password" required>
+                </div>
+                <div class="inputContainer">
+                    <label for="passwordConfirm">Confirm password : </label>
+                    <input name="passwordConfirm" type="password" id="passwordConfirm" required>
+                </div>
+            </fieldset>
+            <div class="buttonContainer">
+                <input value="Create my account" type="submit" class="button">
             </div>
-            <input value="Create my account" type="submit">
         </form>
     </div>
 </body>
