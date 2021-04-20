@@ -6,17 +6,25 @@
 <body>
     <%- include('./fragments/menu/menuRestrictFragment.ejs'); -%>
     <%- include('./fragments/notificationFragment.ejs'); -%>
-    <div id="login">
-        <h1>Login page</h1>
+    <div id="loginContainer">
 
         <!-- Login form -->
         <form action="/user/connect" method="post">
-            <div id="form">
-                <div><label>Mail :</label><input type="email" name="mail" required></div>
-                <div><label>Password :</label><input type="password" name="password"></div>
+            <fieldset id="formLoginComponent">
+                <legend>Login</legend>
+                <div class="formItem">
+                    <label for="mail">Mail :</label>
+                    <input id="mail" type="email" name="mail" placeholder="john.doe@mail.com" required>
+                </div>
+                <div class="formItem">
+                    <label for="password">Password :</label>
+                    <input id="password" type="password" name="password" placeholder="**********">
+                </div>
+            </fieldset>
+            <div id="forgotAndConnect">
+                <input type="submit" class="button buttonOther" formaction="/user/forgotPwd" value="Reset password">
+                <input type="submit" class="button" value="Connect">
             </div>
-            <input type="submit" class="button" formaction="/user/forgotPwd" value="I forgot my password">
-            <input type="submit" class="button" value="Send my credentials">
         </form>
     </div>
 </body>
