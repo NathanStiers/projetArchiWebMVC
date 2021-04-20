@@ -6,21 +6,27 @@
 <body>
     <%- include('./fragments/menu/menuRestrictFragment.ejs'); -%>
     <%- include('./fragments/notificationFragment.ejs'); -%>
-    <div class="home" id="homeContainer">
+    <div id="homeContainer">
 
         <!-- Welcome text -->
-        <div id="welcome">
-            <p><div id="title">Welcome</div> to your new online investment portfolio !</p>
-            <p>Our application will allow you to monitor your different assets regardless of their type.</p>
-            <p>For example :</p>
-            <ul>
-                <li>The Stocks</li>
-                <li>The Crypto-assets</li>
-                <li>The Bonds</li>
-                <li>And many others</li>
-            </ul>
-            <p>A statistics page will give you access to more details about your profits and diversification.</p>
-            <p>Don't wait any longer, registration is free. More features will be offered with a Premium account (free for the moment, enjoy it).</p>
+        <div id="welcomeContainer">
+            <div id="welcomeSentence">
+                <p>
+                  <b id="welcomeWord">Welcome</b> to your new online investment portfolio !
+                </p>
+            </div>
+            <div id="explanationText">
+                <p>Our application will allow you to monitor your different assets regardless of their type.</p>
+                <p>For example :</p>
+                <ul>
+                    <li>The Stocks</li>
+                    <li>The Crypto-assets</li>
+                    <li>The Bonds</li>
+                    <li>And many others</li>
+                </ul>
+                <p>A statistics page will give you access to more details about your profits and diversification.</p>
+                <p>Don't wait any longer, registration is free. More features will be offered with a Premium account (free for the moment, enjoy it).</p>
+            </div>
         </div>
 
         <!-- Login and Subscribe buttons -->
