@@ -6,34 +6,33 @@
 <body>
     <%- include('./fragments/menu/menuRestrictFragment.ejs'); -%>
     <%- include('./fragments/notificationFragment.ejs'); -%>
-    <div class="subscribe">
-        <h1>Subscribe page</h1>
+    <div id="subscribeContainer">
         <!-- Create a new account form -->
         <form action="/user/create" method="post" >
-            <fieldset class="formContainer">
-                <legend>Enter your profile information</legend>
-                <div class="inputContainer">
-                    <label for="name">Name : </label>
-                    <input name="name" type="text" id="name" required>
+            <fieldset id="formSubscribeComponent">
+                <legend>Create account</legend>
+                <div class="formItem">
+                    <label for="name">Name :</label>
+                    <input id="name" name="name" type="text" placeholder="Doe">
                 </div>
-                <div class="inputContainer">
-                    <label for="surname">Surname : </label>
-                    <input name="surname" type="text" id="surname" required>
+                <div class="formItem">
+                    <label for="surname">Surname :</label>
+                    <input id="surname" name="surname" type="text" placeholder="John">
                 </div>
-                <div class="inputContainer">
-                    <label for="mail">Mail : </label>
-                    <input name="mail" type="mail" id="mail" required>
+                <div class="formItem">
+                    <label for="mail">Mail :</label>
+                    <input id="mail" name="mail" type="email" placeholder="john.doe@mail.com">
                 </div>
-                <div class="inputContainer">
-                    <label for="password">Password : </label>
-                    <input name="password" type="password" id="password" required>
+                <div class="formItem">
+                    <label for="password">Password :</label>
+                    <input id="password" name="password" type="password" placeholder="**********">
                 </div>
-                <div class="inputContainer">
-                    <label for="passwordConfirm">Confirm password : </label>
-                    <input name="passwordConfirm" type="password" id="passwordConfirm" required>
+                <div class="formItem">
+                    <label for="passwordConfirm">Confirm password :</label>
+                    <input id="passwordConfirm" name="passwordConfirm" type="password" placeholder="**********">
                 </div>
             </fieldset>
-            <div class="buttonContainer">
+            <div id="createButton">
                 <input value="Create my account" type="submit" class="button">
             </div>
         </form>
