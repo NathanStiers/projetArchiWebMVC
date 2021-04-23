@@ -1,88 +1,159 @@
-*{
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
+#walletContainer {
+    display: flex;
+    flex-flow: column nowrap;
+    padding-right: 2vw;
+    padding-left: 2vw;
 }
 
-#appContainer a {
-    font-weight: bold;
-    color: #2c3e50;
-}
-  
-#appContainer a.router-link-exact-active {
-    color: #42b983;
-}
-  
-#appContainer{
+#searchWalletContainer{
     display: flex;
     flex-flow: row nowrap;
-    align-items: center;
-    height: 13vmin;
-    margin-bottom: 7vmin;
+    height: 2rem;
+    width: 24rem; 
+    max-width: 60vw;
+    margin-right: 1rem;
+    margin-left: auto;
+    margin-bottom: 5vh;
+    border-radius: 30px;
+    padding-left: 1rem;
+    font-size: 1.05rem;
 }
   
-#logo{
-    margin-right: auto;
+#searchWallet{
+    height: 2rem;
+    width: 24rem; 
+    max-width: 60vw;
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    padding-left: 1rem;
+    font-size: 1.05rem;
 }
   
-#logo img{
-    height: 13vmin;
-    width: auto;
-    margin-left: 1vmin;
-    margin-right: auto;
+#searchWallet:focus{
+    outline: none;
+}
+
+#submitSearchWallet{
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    background-color: #364a5e;
+    color: #fff;
+}
+
+.buttonOther:hover {
+    background-color: #49647e !important;
 }
   
-.routerlink{
-    margin-right: 5vmin;
+#walletItemContainer{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
 }
-  
-.addWallet{
+
+.textAlign{
+      text-align: center;
+      line-height: 2rem;
+}
+
+.textAlign > a {
+      text-decoration: inherit;
+}
+
+.walletCardContainer{
     border: thin solid black;
-    min-height: 30vmin;
-    min-width: 60vmin;
-    max-height: 60vmin;
-    max-width: 70vmin;
     display: flex;
     flex-flow: column nowrap;
     justify-content: center;
     align-items: center;
-    font-size: large;
-    cursor: pointer;
+    font-size: 1.2rem;
+    min-height: 15rem;
+    min-width: 25rem;
+    max-height: 40vh;
+    max-width: 80vw;
+    margin: 1rem;
+    overflow: hidden;
 }
 
-.walletCard{
-    border: thin solid black;
-    min-height: 15.5rem;
-    min-width: 60vmin;
-    max-height: 15.5rem;
-    max-width: 70vmin;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-items: center;
-    font-size: large;
-    margin-bottom: 10%;
-    cursor: pointer;
+#type, #label{
+    font-size: 1.05rem;
+    max-width: 60%
 }
 
-.deleteCard{
+.button{
+    margin-top: 1.5rem;
+}
+
+#titleCreate{
+    margin-bottom: 1.5rem;
+}
+
+.deleteButton{
     align-self: flex-end;
     margin-right: 5%;
     color: black;
-    cursor: url("/images/danger-cursor.png"), auto;
     font-size: larger;
+    cursor: url('/images/danger-cursor.png'), auto;
 }
 
-.deleteCard:hover{
+.deleteButton:hover{
     color: red;
 }
 
+.renameContainer{
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    height: 25%;
+}
+
+.renameContainer > input {
+    height: 1.2rem;
+}
+
+#addWalletContainer{
+    border: thin solid black;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    cursor: pointer;
+    height: 15rem;
+    width: 25rem;
+    max-height: 40vh;
+    max-width: 80vw;
+    margin: 1rem;
+}
+
+.button{
+    zoom: 0.8;
+}
+
 @media all and (max-width:630px){
-    .routerlink{
-        margin-right: 3vmin;
+    #walletContainer{
+        padding-right: none;
+        padding-left: none;
     }
-    #appContainer a {
-        font-size: 0.9em;
+    #searchWallet{
+        align-self: center;
+    }
+    #walletItemContainer{
+        flex-flow: column nowrap;
+        align-items: center;
+        justify-content: center;
+    }
+    .walletCardContainer{
+        min-height: inherit;
+        min-width: inherit;
+        height: 15rem;
+        width: 25rem;
+    }
+    .modalTitle{
+        margin-bottom: 40%;
+    }
+    .modalAction {
+        flex-direction: column;
     }
 }

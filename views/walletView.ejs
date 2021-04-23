@@ -6,46 +6,46 @@
 <body>
     <%- include('./fragments/menu/menuFragment.ejs'); -%>
     <%- include('./fragments/notificationFragment.ejs'); -%>
-    <div class="wallet">
+    <div id="walletContainer">
 
         <!-- Search form -->
-        <form class="searchWallet" method="POST" action="/wallets/search">
-            <input type="search" name="searchLike">
-            <input type="submit" value="Search">
+        <form id="searchWalletContainer" method="POST" action="/wallets/search">
+            <input id="searchWallet" type="search" name="searchLike">
+            <input id="submitSearchWallet" type="submit" value="Search">
         </form>
 
-        <!-- Shows all the user's wallets -->
-        <% for(let i=0 ; i < user.wallet_list.length ; i++) { %>
-            <div class="walletCard walletItem">
-                <a class="deleteCard" href="/wallets/<%= user.wallet_list[i].id %>/delete">X</a>
-                <a href="/wallets/<%= user.wallet_list[i].id %>">
-                    <p>Wallet <%= i+1 %></p>
-                    <p><%= user.wallet_list[i].label %></p>
-                    <p>Type : <%= user.wallet_list[i].type %></p>
-                </a>
-            </div>
-        <% } %>
+        <div id="walletItemContainer">
+            <!-- Shows all the user's wallets -->
+            <% for(let i=0 ; i < user.wallet_list.length ; i++) { %>
+                <div class="walletCardContainer textAlign">
+                    <a class="deleteButton" href="/wallets/<%= user.wallet_list[i].id %>/delete">X</a>
+                    <a href="/wallets/<%= user.wallet_list[i].id %>">
+                        <p>Wallet <%= i+1 %></p>
+                        <p><%= user.wallet_list[i].label %></p>
+                        <p>Type : <%= user.wallet_list[i].type %></p>
+                    </a>
+                </div>
+            <% } %>
 
-        <!-- Add wallet form -->
-        <% if(!max_reached){ %>
-            <div class="addWallet walletItem">
-                <form class="modal-container" method="POST" action="/wallets/create">
-                    <span class="modal__title">Create a new wallet</span>
-                    <div class="modal__content">
-                      Label : <input type="text" name="label" id="" maxlength="50" >
-                      <br/><br/>
-                      Type : <select name="type" id="">
-                          <% for(let i=0 ; i < types.length ; i++) { %>
-                              <option value="<%= types[i] %>" ><%= types[i] %></option>
-                          <% } %>
-                      </select>
+            <!-- Add wallet form -->
+            <% if(!max_reached){ %>
+                <form class="walletCardContainer" method="POST" action="/wallets/create">
+                    <span id="titleCreate">Create a new wallet</span>
+                    <div>
+                        <label for="label">Label : </label><input type="text" name="label" id="label" maxlength="50" >
+                        <br/><br/>
+                        <label for="type">Type :</label><select name="type" id="type">
+                            <% for(let i=0 ; i < types.length ; i++) { %>
+                                <option value="<%= types[i] %>" ><%= types[i] %></option>
+                            <% } %>
+                        </select>
                     </div>
-                    <div class="modal__action">
-                      <input class="vfm-btn" type="submit" value="Confirm">
+                    <div>
+                        <input class="button" type="submit" value="Confirm">
                     </div>
                 </form>
-            </div>
-        <% } %>
+            <% } %>
+        </div>
     </div>
 </body>
 
