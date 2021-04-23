@@ -1,0 +1,30 @@
+#premiumContainer{
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
+    width: 60rem;
+    max-width: 80vw;
+}
+  
+#explanationContainer{
+    font-size: 1.05rem;
+    line-height: 1.2rem;
+    margin-bottom: 6vh;
+    border: black thin solid;
+    padding: 1.5rem;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+  
+#explanationContainer::-webkit-scrollbar {
+    display: none;
+}
+  
+#titleExplanation{
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 6vh;
+}
