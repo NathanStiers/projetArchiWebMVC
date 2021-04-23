@@ -6,22 +6,24 @@
 <body>
     <%- include('./fragments/menu/menuFragment.ejs'); -%>
     <%- include('./fragments/notificationFragment.ejs'); -%>
-    <div class="statistics">
-        <h1>Statistics page</h1>
+    <div id="statisticsContainer">
+        <fieldset>
+            <legend>Your investments statistics</legend>
 
-        <!-- Calculate some statistics based on user's assets -->
-        <% if(typeof howMuchType !=='undefined' && countUniqueAssets){ %>
-            <p>Number of crypto-assets : <%= howMuchType["Crypto-assets"] %></p>
-            <p>Number of stocks : <%= howMuchType.Stocks %></p>
-            <p>Number of unique assets : <%= countUniqueAssets %></p>
-            <p>Total P/L (of crypto-assets) : <%= totalProfit.toFixed(2) %>€</p>
-            <p>Best Unit Cost Price : <%= pruComparison.best[0] %> => <%= pruComparison.best[1].toFixed(2) %>€</p>
-            <p>Worst Unit Cost Price : <%= pruComparison.worst[0] %> => <%= pruComparison.worst[1].toFixed(2) %>€</p>
-            <p>Best value (of crypto-assets) : <%= valueComparison.best[0] %> => <%= valueComparison.best[1].toFixed(2) %>€</p>
-            <p>Worst value (of crypto-assets) : <%= valueComparison.worst[0] %> => <%= valueComparison.worst[1].toFixed(2) %>€</p>
-        <% } else { %>
-            <p>You don't have any asset for the moment</p>
-        <% }%>
+            <!-- Calculate some statistics based on user's assets -->
+            <% if(typeof howMuchType !=='undefined' && countUniqueAssets){ %>
+                <p>Number of crypto-assets : <%= howMuchType["Crypto-assets"] %></p>
+                <p>Number of stocks : <%= howMuchType.Stocks %></p>
+                <p>Number of unique assets : <%= countUniqueAssets %></p>
+                <p>Total P/L (of crypto-assets) : <%= totalProfit.toFixed(2) %>€</p>
+                <p>Best Unit Cost Price : <%= pruComparison.best[0] %> => <%= pruComparison.best[1].toFixed(2) %>€</p>
+                <p>Worst Unit Cost Price : <%= pruComparison.worst[0] %> => <%= pruComparison.worst[1].toFixed(2) %>€</p>
+                <p>Best value (of crypto-assets) : <%= valueComparison.best[0] %> => <%= valueComparison.best[1].toFixed(2) %>€</p>
+                <p>Worst value (of crypto-assets) : <%= valueComparison.worst[0] %> => <%= valueComparison.worst[1].toFixed(2) %>€</p>
+            <% } else { %>
+                <p>You don't have any asset for the moment</p>
+            <% }%>
+        </fieldset>
     </div>
 </body>
 

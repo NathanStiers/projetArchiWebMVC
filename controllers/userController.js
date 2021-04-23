@@ -196,7 +196,7 @@ exports.statisticsResults = (req, res) => {
                     }
                 })
                 let countUniqueAssets = new Set(resultSQL.map(({ ticker }) => ticker)).size
-                res.render('statisticsView.ejs', { howMuchType, countUniqueAssets, totalProfit, pruComparison, valueComparison })
+                res.render('statisticsView.ejs', { howMuchType, countUniqueAssets, totalProfit, pruComparison, valueComparison, notification: "Only crypto-assets are taken into account in the statistics" })
             }).catch(error => {
                 res.render('statisticsView.ejs', { notification: error + ". Please contact the webmaster" })
             })
