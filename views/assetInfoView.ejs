@@ -6,49 +6,56 @@
 <body>
     <%- include('./fragments/menu/menuFragment.ejs'); -%>
     <%- include('./fragments/notificationFragment.ejs'); -%>
-    <h1>Asset page</h1>
-    <h2>Edit info</h2>
 
-    <!-- Change the quantity of a specific asset form -->
-    <form action="/assets/changeQty" method="post">
-        Quantity : <input type="number" name="quantity" placeholder="<%= asset.quantity %>" value="<%= asset.quantity %>" step="0.000000001" />
-        <input type="hidden" name="wallet_id" value="<%= asset.id_wallet %>">
-        <% let jsonsql=JSON.stringify(asset) %>
-        <input type="hidden" name="assetInfos" value="<%= jsonsql %>">
-        <% if(typeof apiInfos !=='undefined' ) { %>
-            <% let jsonapi=JSON.stringify(api) %>
-            <input type="hidden" name="apiInfos" value="<%= jsonapi %>">
-        <% } %>
-        <input type="submit" value="Send new value">
-    </form>
+    <div id="assetInfoContainer">
 
-    <!-- Change the initial investment of a specific asset form -->
-    <form action="/assets/changeInvestment" method="post">
-        Amount invested : <input type="number" name="invested_amount" placeholder="<%= asset.invested_amount %>" value="<%= asset.invested_amount %>" step="0.001" />
-        <input type="hidden" name="wallet_id" value="<%= asset.id_wallet %>">    
-        <input type="hidden" name="assetInfos" value="<%= jsonsql %>">
-        <% if(typeof apiInfos !=='undefined' ) { %>
-            <input type="hidden" name="apiInfos" value="<%= jsonapi %>">
-        <% } %>
-        <input type="submit" value="Send new value">
-    </form>
+        <fieldset>
+            <legend>Deeper asset informations</legend>
+            <!-- Details of a specific asset -->
+            <div>
+                <div id="detailField">
+                    <% let pru = asset.invested_amount/asset.quantity %>
+                    <p>Unit cost price : <%= pru.toFixed(2) %> €</p>
+                    <% if(typeof api !=='undefined' ) { %>
+                        <p>Current value : <%= (api.price * asset.quantity).toFixed(2) %> €</p>
+                        <p>Max supply : <%= api.max_supply %> unités</p>
+                        <p>Total supply : <%= api.total_supply %> unités</p>
+                        <p>Market cap : <%= (api.market_cap).toFixed(2) %> €</p>
+                    <% } %>
+                </div>
+            </div>
+        </fieldset>
 
-    <!-- Details of a specific asset -->
-    <div class="modal-container">
-        <span class="modal__title">Deeper information</span>
-        <div class="modal__content">
-            <% let pru = asset.invested_amount/asset.quantity %>
-            <p>Unit cost price : <%= pru.toFixed(2) %> €</p>
-            <% if(typeof api !=='undefined' ) { %>
-                <p>Current value : <%= (api.price * asset.quantity).toFixed(2) %> €</p>
-                <p>Max supply : <%= api.max_supply %> unités</p>
-                <p>Total supply : <%= api.total_supply %> unités</p>
-                <p>Market cap : <%= (api.market_cap).toFixed(2) %> €</p>
-            <% } %>
+        <fieldset id="modifyField">
+            <legend>Edit asset information</legend>
+            <!-- Change the quantity of a specific asset form -->
+            <form class="modifyForm" action="/assets/changeQty" method="post">
+                Quantity : <input type="number" name="quantity" placeholder="<%= asset.quantity %>" value="<%= asset.quantity %>" step="0.000000001" />
+                <input type="hidden" name="wallet_id" value="<%= asset.id_wallet %>">
+                <% let jsonsql=JSON.stringify(asset) %>
+                <input type="hidden" name="assetInfos" value="<%= jsonsql %>">
+                <% if(typeof apiInfos !=='undefined' ) { %>
+                    <% let jsonapi=JSON.stringify(api) %>
+                    <input type="hidden" name="apiInfos" value="<%= jsonapi %>">
+                <% } %>
+                <input type="submit" value="Send new value">
+            </form>
+            <!-- Change the initial investment of a specific asset form -->
+            <form class="modifyForm" action="/assets/changeInvestment" method="post">
+                Amount invested : <input type="number" name="invested_amount" placeholder="<%= asset.invested_amount %>" value="<%= asset.invested_amount %>" step="0.001" />
+                <input type="hidden" name="wallet_id" value="<%= asset.id_wallet %>">    
+                <input type="hidden" name="assetInfos" value="<%= jsonsql %>">
+                <% if(typeof apiInfos !=='undefined' ) { %>
+                    <input type="hidden" name="apiInfos" value="<%= jsonapi %>">
+                <% } %>
+                <input type="submit" value="Send new value">
+            </form>
+        </fieldset>
+
+        <div id="back">
+            <a class="button" href="javascript:history.back()">Go back</a>
         </div>
-        <div class="modal__action">
-            <a class="vfm-btn" href="javascript:history.back()">Go back</a>
-        </div>
+
     </div>
 </body>
 
