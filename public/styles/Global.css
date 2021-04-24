@@ -61,6 +61,17 @@
 .routerlink{
     margin-right: 5vmin;
 }
+
+.notification{
+    background-color:lightsalmon;
+    border: solid thin black;
+    width: 33%;
+    max-width: 66%;
+    margin-left: 3%;
+    padding-left: 1%;
+    font-weight: bold;
+    margin-bottom: 5%;
+}
    
 @media all and (max-width:630px){
     .button{
