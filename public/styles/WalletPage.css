@@ -136,8 +136,9 @@
         padding-right: none;
         padding-left: none;
     }
-    #searchWallet{
-        align-self: center;
+    #searchWalletContainer{
+        margin-right: auto;
+        margin-left: auto;
     }
     #walletItemContainer{
         flex-flow: column nowrap;

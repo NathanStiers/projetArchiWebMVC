@@ -46,6 +46,11 @@
     height: 13vmin;
     margin-bottom: 7vmin;
 }
+
+#linkContainer{
+    display: flex;
+    flex-flow: row wrap;
+}
   
 #logo{
     margin-right: auto;
@@ -60,6 +65,7 @@
   
 .routerlink{
     margin-right: 5vmin;
+    text-decoration: none;
 }
 
 .notification{
@@ -71,6 +77,10 @@
     padding-left: 1%;
     font-weight: bold;
     margin-bottom: 5%;
+}
+
+#mobileSeparator{
+    display: none;       
 }
    
 @media all and (max-width:630px){
@@ -84,5 +94,30 @@
     }
     #appContainer a {
         font-size: 0.9em;
+        margin-bottom: 2vh;
+        text-decoration: none;
     }
+    #linkContainer{
+        flex-flow: column-reverse;
+        text-align: end;
+    }
+    #appContainer{
+        min-height: 20vh;
+        max-height: 25vh;
+        margin-bottom: 0vmin;
+    }
+    #mobileSeparator{
+        display: inherit;
+        margin-bottom: 12vmin;
+        border: solid thin #364a5e;
+        background-color: #364a5e;
+        width: 80vw;
+    }
+    .separator{
+        display: none;
+    }
+    #logo img{
+        height: 20vmin;
+        width: auto;
+    }    
 }

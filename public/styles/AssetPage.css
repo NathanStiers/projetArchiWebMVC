@@ -235,4 +235,7 @@ legend {
         height: 15rem;
         width: 25rem;
     }
+    #searchAssetContainer{
+        margin-right: 25%;
+    }
 }
