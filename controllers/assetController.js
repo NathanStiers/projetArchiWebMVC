@@ -158,7 +158,7 @@ exports.changeQtyAsset = (req, res) => {
     if (req.body.apiInfos != undefined) {
         api = JSON.parse(req.body.apiInfos)
     }
-    if (req.body.quantity === '' || isNaN(req.body.invested_amount) || req.body.quantity <= 0) {
+    if (req.body.quantity === '' || isNaN(req.body.quantity) || req.body.quantity <= 0) {
         res.render('assetInfoView.ejs', { api, asset: assetParsed, notification: "The quantity is invalid" })
         return;
     }
